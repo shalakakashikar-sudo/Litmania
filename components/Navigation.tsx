@@ -1,5 +1,4 @@
-
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 interface NavigationProps {
   onHome: () => void;
@@ -7,14 +6,12 @@ interface NavigationProps {
 }
 
 const Navigation: React.FC<NavigationProps> = ({ onHome, onFinalQuiz }) => {
-  const [scrolled, setScrolled] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
       const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
       const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
       const scrolledValue = (winScroll / height) * 100;
-      setScrolled(scrolledValue);
       
       const progressBar = document.getElementById('scroll-progress');
       if (progressBar) {

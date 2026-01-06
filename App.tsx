@@ -358,7 +358,7 @@ const App: React.FC = () => {
                <span>←</span> Return to Library
             </button>
             <div className="glass rounded-[3rem] overflow-hidden shadow-2xl border-4 border-slate-50">
-              <Quiz title="The Grand Archivist's Mastery Quiz" questions={allQuestions} onComplete={(score) => goHome()} />
+              <Quiz title="The Grand Archivist's Mastery Quiz" questions={allQuestions} onComplete={() => goHome()} />
             </div>
           </div>
         </main>
