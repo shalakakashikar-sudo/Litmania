@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { LITERARY_DEVICES } from './constants';
 import { LiteraryDevice, Category } from './types';
@@ -7,12 +6,139 @@ import DeviceCard from './components/DeviceCard';
 import InfographicModal from './components/InfographicModal';
 import Quiz from './components/Quiz';
 
+type LunaMood = 'neutral' | 'surprised' | 'sad' | 'winking';
+
+// --- THE NEW HARDCODED MASCOT COMPONENT ---
+const LunaMascot: React.FC<{ mood: LunaMood; onClick: () => void }> = ({ mood, onClick }) => {
+  // SVG Paths for different expression parts
+  const expressions = {
+    eyes: {
+      neutral: (
+        <g fill="#4F46E5">
+          <circle cx="75" cy="95" r="8" />
+          <circle cx="125" cy="95" r="8" />
+          {/* Sparkles */}
+          <circle cx="78" cy="92" r="3" fill="white" />
+          <circle cx="128" cy="92" r="3" fill="white" />
+        </g>
+      ),
+      surprised: (
+        <g fill="#4F46E5">
+          <circle cx="75" cy="95" r="10" />
+          <circle cx="125" cy="95" r="10" />
+          <circle cx="78" cy="92" r="4" fill="white" />
+          <circle cx="128" cy="92" r="4" fill="white" />
+        </g>
+      ),
+      sad: (
+        <g fill="#4F46E5">
+          <path d="M65 100 Q75 90 85 100" stroke="#4F46E5" strokeWidth="3" fill="none" />
+          <path d="M115 100 Q125 90 135 100" stroke="#4F46E5" strokeWidth="3" fill="none" />
+          {/* Tear */}
+          <circle cx="65" cy="110" r="3" fill="#60A5FA" opacity="0.8" />
+        </g>
+      ),
+      winking: (
+        <g>
+           {/* Left Eye Open */}
+          <circle cx="75" cy="95" r="8" fill="#4F46E5" />
+          <circle cx="78" cy="92" r="3" fill="white" />
+          {/* Right Eye Wink */}
+          <path d="M115 95 Q125 105 135 95" stroke="#4F46E5" strokeWidth="4" fill="none" />
+        </g>
+      )
+    },
+    mouth: {
+      neutral: <path d="M90 125 Q100 130 110 125" stroke="#4F46E5" strokeWidth="3" strokeLinecap="round" fill="none" />,
+      surprised: <circle cx="100" cy="130" r="6" stroke="#4F46E5" strokeWidth="3" fill="none" />,
+      sad: <path d="M90 135 Q100 125 110 135" stroke="#4F46E5" strokeWidth="3" strokeLinecap="round" fill="none" />,
+      winking: <path d="M90 125 Q100 135 110 125" stroke="#4F46E5" strokeWidth="3" strokeLinecap="round" fill="none" />
+    }
+  };
+
+  return (
+    <div className="relative group cursor-pointer w-64 h-64 md:w-80 md:h-80 xl:w-[450px] xl:h-[450px]" onClick={onClick}>
+      {/* Container for the SVG */}
+      <svg viewBox="0 0 200 200" className="w-full h-full drop-shadow-2xl transition-transform duration-500 group-hover:scale-105">
+        <defs>
+          <linearGradient id="moonGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#FEF3C7" />
+            <stop offset="100%" stopColor="#F59E0B" />
+          </linearGradient>
+          <linearGradient id="hairGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#4338ca" />
+            <stop offset="100%" stopColor="#312e81" />
+          </linearGradient>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+
+        {/* Crescent Moon Background */}
+        <path 
+          d="M100,20 A80,80 0 1,1 100,180 A60,60 0 1,0 100,20 Z" 
+          fill="url(#moonGradient)" 
+          className="animate-[pulse_4s_ease-in-out_infinite]"
+        />
+
+        {/* Back Hair (Flowing) */}
+        <path 
+          d="M60,80 Q40,120 30,160 Q70,180 100,160 Q130,180 170,160 Q160,120 140,80" 
+          fill="url(#hairGradient)" 
+        />
+
+        {/* Face Shape */}
+        <ellipse cx="100" cy="100" rx="45" ry="50" fill="#FFE4E6" />
+        
+        {/* Bangs / Front Hair */}
+        <path 
+          d="M55,100 Q50,60 100,50 Q150,60 145,100 Q140,70 100,75 Q60,70 55,100" 
+          fill="url(#hairGradient)" 
+        />
+
+        {/* Cheeks (Blush) */}
+        <ellipse cx="70" cy="110" rx="6" ry="3" fill="#F472B6" opacity="0.4" />
+        <ellipse cx="130" cy="110" rx="6" ry="3" fill="#F472B6" opacity="0.4" />
+
+        {/* Dynamic Expressions */}
+        {expressions.eyes[mood]}
+        {expressions.mouth[mood]}
+
+        {/* Floating Stars Decoration */}
+        <g className="animate-[bounce_3s_infinite]" style={{ transformOrigin: 'center' }}>
+           <path d="M160 40 L162 45 L167 45 L163 48 L164 53 L160 50 L156 53 L157 48 L153 45 L158 45 Z" fill="#FCD34D" />
+        </g>
+        <g className="animate-[bounce_4s_infinite]" style={{ transformOrigin: 'center', animationDelay: '1s' }}>
+           <path d="M40 150 L42 155 L47 155 L43 158 L44 163 L40 160 L36 163 L37 158 L33 155 L38 155 Z" fill="#FCD34D" />
+        </g>
+
+      </svg>
+
+      {/* Hover Text */}
+      <div className="absolute inset-0 flex items-end justify-center pb-8 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+        <span className="bg-black/80 text-white text-[10px] px-3 py-1 rounded-full uppercase tracking-widest backdrop-blur-sm">
+          Change Mood
+        </span>
+      </div>
+    </div>
+  );
+};
+
+// --- MAIN APP ---
+
 const App: React.FC = () => {
   const [selectedDevice, setSelectedDevice] = useState<LiteraryDevice | null>(null);
   const [showFinalQuiz, setShowFinalQuiz] = useState(false);
   const [activeCategory, setActiveCategory] = useState<Category | 'All'>('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [isScrolled, setIsScrolled] = useState(false);
+  
+  // Mascot state
+  const [lunaMood, setLunaMood] = useState<LunaMood>('neutral');
 
   const searchInputRef = useRef<HTMLInputElement>(null);
   const libraryRef = useRef<HTMLElement>(null);
@@ -35,7 +161,6 @@ const App: React.FC = () => {
       .flatMap(d => d.quiz), 
   []);
 
-  // Find next and previous devices in the currently filtered list
   const navigateDevice = (direction: 'next' | 'prev') => {
     if (!selectedDevice) return;
     const currentIndex = filteredDevices.findIndex(d => d.id === selectedDevice.id);
@@ -50,7 +175,6 @@ const App: React.FC = () => {
     setSelectedDevice(filteredDevices[nextIndex]);
   };
 
-  // Intersection Observer for seamless revealing of cards
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -78,7 +202,6 @@ const App: React.FC = () => {
       if (e.key === '/' && document.activeElement !== searchInputRef.current) {
         e.preventDefault();
         searchInputRef.current?.focus();
-        // Seamlessly scroll to search
         const searchBox = searchInputRef.current?.parentElement;
         if (searchBox) {
             window.scrollTo({ 
@@ -114,19 +237,44 @@ const App: React.FC = () => {
     }
   };
 
-  // Auto-scroll logic when searching to keep results visible
   useEffect(() => {
     if (searchQuery && window.scrollY < 400) {
       scrollToLibrary();
     }
   }, [searchQuery]);
 
-  // When opening final quiz, ensure we start at the top
   useEffect(() => {
     if (showFinalQuiz) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }, [showFinalQuiz]);
+
+  // Mascot logic for handling click-to-change mood
+  const cycleMood = () => {
+    const moods: LunaMood[] = ['neutral', 'surprised', 'sad', 'winking'];
+    const currentIndex = moods.indexOf(lunaMood);
+    const nextMood = moods[(currentIndex + 1) % moods.length];
+    setLunaMood(nextMood);
+  };
+
+  const moodConfig = {
+    neutral: {
+      quote: "In the moonlit halls of the mind, every device is a master key.",
+      subtitle: "The Librarian of Dreams"
+    },
+    surprised: {
+      quote: "Aha! A hidden layer of meaning revealed itself!",
+      subtitle: "The Astonished Sage"
+    },
+    sad: {
+      quote: "Even tragedy is beautiful when carved with the right words.",
+      subtitle: "The Melancholic Poet"
+    },
+    winking: {
+      quote: "Every metaphor is a secret shared between us.",
+      subtitle: "The Playful Archivist"
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#fdfbfb] text-black pb-64 relative selection:bg-indigo-200">
@@ -137,19 +285,35 @@ const App: React.FC = () => {
           <div className="absolute top-0 right-0 -z-10 w-[800px] h-[800px] bg-indigo-50 rounded-full blur-[140px] opacity-70"></div>
           <div className="absolute -bottom-40 -left-40 -z-10 w-[700px] h-[700px] bg-rose-50 rounded-full blur-[120px] opacity-60"></div>
           
-          <div className="text-center">
-            <h1 className="text-5xl md:text-8xl font-serif-elegant font-black text-black mb-10 tracking-tighter animate-in slide-in-from-bottom-12 duration-1000 leading-none">
-              The Art of <br/> <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-800 to-rose-800">Expression.</span>
-            </h1>
-            <p className="max-w-2xl mx-auto text-2xl md:text-3xl font-classic italic text-slate-900 leading-tight mb-16 font-black">
-              Explore the sanctuary of words. Master the devices that transform language into vivid imagery, rhythm, and profound meaning.
+          <div className="text-center flex flex-col items-center">
+            
+            {/* The Litmania Muse: Luna (SVG Version) */}
+            <div className="relative mb-16 animate-in fade-in slide-in-from-bottom-8 duration-1000 flex flex-col items-center">
+               <div className="absolute inset-[-40px] bg-gradient-to-tr from-indigo-100 via-rose-100 to-amber-100 rounded-full blur-[60px] opacity-60 animate-pulse"></div>
+               
+               {/* Replaced Image with SVG Component */}
+               <LunaMascot mood={lunaMood} onClick={cycleMood} />
+
+                {/* Luna's Nameplate */}
+                <div className="relative -mt-10 flex flex-col items-center gap-3 z-10">
+                  <div className="bg-black text-white px-12 py-4 rounded-full font-black tracking-[0.5em] text-xs md:text-sm shadow-[0_20px_40px_rgba(0,0,0,0.3)] whitespace-nowrap uppercase transform hover:scale-110 transition-transform cursor-pointer" onClick={cycleMood}>
+                    LUNA
+                  </div>
+                  <div className="text-[9px] md:text-[11px] font-black tracking-[0.3em] text-slate-500 uppercase whitespace-nowrap bg-white/90 backdrop-blur-md px-6 py-2 rounded-xl border border-slate-100 shadow-sm transition-all duration-500">
+                    {moodConfig[lunaMood].subtitle}
+                  </div>
+                </div>
+            </div>
+
+            <p className="max-w-3xl mx-auto text-2xl md:text-4xl font-serif-elegant italic text-slate-900 leading-tight mb-20 mt-8 font-black tracking-tight drop-shadow-sm h-24 flex items-center justify-center">
+              "{moodConfig[lunaMood].quote}"
             </p>
             
-            <div className="max-w-3xl mx-auto mb-20 relative group">
+            <div className="max-w-3xl mx-auto mb-20 w-full relative group">
               <input 
                 ref={searchInputRef}
                 type="text"
-                placeholder="Search for a device... (Press '/' to focus)"
+                placeholder="Consult the library... (Press '/' to search)"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full px-12 py-8 rounded-[3rem] bg-white border-4 border-slate-200 shadow-2xl focus:ring-8 focus:ring-indigo-100 transition-all outline-none text-2xl font-black group-hover:border-black"
@@ -172,7 +336,6 @@ const App: React.FC = () => {
                   key={cat}
                   onClick={() => {
                     setActiveCategory(cat as Category | 'All');
-                    // Smooth scroll to results immediately on category change
                     setTimeout(scrollToLibrary, 50);
                   }}
                   className={`px-8 py-4 sm:px-10 sm:py-5 rounded-full text-xs sm:text-sm font-black tracking-[0.2em] transition-all duration-300 border-4 ${
@@ -203,14 +366,14 @@ const App: React.FC = () => {
               ))
             ) : (
               <div className="col-span-full py-64 text-center animate-in fade-in zoom-in-95 duration-500">
-                <div className="text-[12rem] mb-16 opacity-40">📖</div>
-                <h3 className="text-5xl sm:text-7xl font-serif-elegant text-black mb-8 italic font-black">No devices found.</h3>
+                <div className="text-[12rem] mb-16 opacity-40">🌙</div>
+                <h3 className="text-5xl sm:text-7xl font-serif-elegant text-black mb-8 italic font-black">Luna cannot find that tome.</h3>
                 <p className="text-2xl sm:text-4xl text-slate-800 font-classic font-black">Try a different term or clear your filters.</p>
                 <button 
                   onClick={() => {setSearchQuery(''); setActiveCategory('All');}}
                   className="mt-16 text-indigo-800 font-black text-2xl sm:text-3xl hover:underline decoration-4 underline-offset-8"
                 >
-                  Show all devices
+                  Restore the library
                 </button>
               </div>
             )}
@@ -225,12 +388,12 @@ const App: React.FC = () => {
                 className="flex items-center gap-6 px-10 py-5 bg-black text-white rounded-[2.5rem] hover:scale-105 transition-all font-black text-xl shadow-2xl"
               >
                 <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
-                Back to Sanctuary
+                Return to Luna's Sanctuary
               </button>
             </div>
             <div className="glass rounded-[4rem] sm:rounded-[6rem] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.3)] border-[6px] sm:border-[12px] border-slate-50">
               <Quiz 
-                title="The Literary Grand Masterpiece Quiz"
+                title="The Grand Archivist's Mastery Quiz"
                 questions={allQuestions}
                 onComplete={(score) => {
                   goHome();
@@ -263,8 +426,9 @@ const App: React.FC = () => {
         </button>
       )}
 
+      {/* Creator Credits Section */}
       <div className="fixed bottom-6 right-6 lg:bottom-10 lg:right-10 z-[100] px-4 py-2 glass border-2 border-indigo-100 rounded-2xl shadow-xl group hover:bg-black transition-all pointer-events-auto scale-90">
-        <span className="text-[7px] uppercase tracking-[0.4em] text-indigo-800 font-black block leading-none mb-1 group-hover:text-white transition-colors">Litmania Curator</span>
+        <span className="text-[7px] uppercase tracking-[0.4em] text-indigo-800 font-black block leading-none mb-1 group-hover:text-white transition-colors">Created by</span>
         <span className="text-xs font-serif-elegant font-black text-black group-hover:text-white leading-none block">Shalaka Kashikar</span>
       </div>
 
