@@ -8,10 +8,9 @@ import Quiz from './components/Quiz';
 
 type LunaMood = 'neutral' | 'surprised' | 'sad' | 'winking';
 
-// --- THE DREAMY LUNA MASCOT (WITH MOON & FEATHER) ---
+// --- THE NEW "DREAMY & FULL HAIR" LUNA MASCOT ---
 const LunaMascot: React.FC<{ mood: LunaMood; onClick: () => void }> = ({ mood, onClick }) => {
   
-  // --- Reusable Facial Features ---
   const eyeBase = (
     <g>
       <circle cx="85" cy="95" r="11" fill="white" />
@@ -64,16 +63,23 @@ const LunaMascot: React.FC<{ mood: LunaMood; onClick: () => void }> = ({ mood, o
 
   return (
     <div className="relative group cursor-pointer w-48 h-48 md:w-72 md:h-72 lg:w-[420px] lg:h-[420px] transition-all duration-500" onClick={onClick}>
-      <svg viewBox="0 0 220 220" className="w-full h-full drop-shadow-2xl transition-transform duration-500 group-hover:scale-105 overflow-visible">
+      {/* Increased viewbox size to accommodate fuller hair */}
+      <svg viewBox="0 0 240 240" className="w-full h-full drop-shadow-2xl transition-transform duration-500 group-hover:scale-105 overflow-visible">
         <defs>
           <linearGradient id="moonGradient" x1="0%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" stopColor="#fef3c7" />
             <stop offset="100%" stopColor="#fcd34d" />
           </linearGradient>
-          <radialGradient id="hairGradient" cx="50%" cy="20%" r="80%">
-             <stop offset="0%" stopColor="#5B4034" />
-             <stop offset="100%" stopColor="#3E2723" />
-          </radialGradient>
+          {/* New Softer, Dreamier Hair Gradients */}
+          <linearGradient id="hairGradientDeep" x1="0%" y1="0%" x2="0%" y2="100%">
+             <stop offset="0%" stopColor="#1e1b4b" /> {/* Deep Indigo */}
+             <stop offset="100%" stopColor="#312e81" />
+          </linearGradient>
+           <linearGradient id="hairGradientMain" x1="0%" y1="0%" x2="100%" y2="100%">
+             <stop offset="0%" stopColor="#312e81" />
+             <stop offset="50%" stopColor="#4338ca" />
+             <stop offset="100%" stopColor="#6366f1" /> {/* Soft Violet-Blue tips */}
+          </linearGradient>
           <radialGradient id="eyeGradient" cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#6366f1" />
             <stop offset="100%" stopColor="#312e81" />
@@ -83,39 +89,84 @@ const LunaMascot: React.FC<{ mood: LunaMood; onClick: () => void }> = ({ mood, o
              <stop offset="100%" stopColor="#e2e8f0" />
           </linearGradient>
            <filter id="glow">
-            <feGaussianBlur stdDeviation="2" result="coloredBlur" />
+            <feGaussianBlur stdDeviation="2.5" result="coloredBlur" />
             <feMerge>
               <feMergeNode in="coloredBlur" />
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
+          {/* Specific filter for soft hair edges */}
+           <filter id="softHairBlur">
+            <feGaussianBlur stdDeviation="4" />
+          </filter>
         </defs>
 
-        <path d="M110,10 A90,90 0 1,1 110,190 A70,70 0 1,0 110,10 Z" fill="url(#moonGradient)" filter="url(#glow)" transform="rotate(-15 110 110)" className="animate-[pulse_4s_ease-in-out_infinite]" />
-        <path d="M60,80 Q30,120 20,160 Q60,180 110,170 Q160,180 200,160 Q190,120 160,80" fill="url(#hairGradient)" />
-        <path d="M60,150 Q110,140 160,150 L180,220 L40,220 Z" fill="#312e81" />
+        {/* --- BACKGROUND MOON --- */}
+        <path d="M120,20 A90,90 0 1,1 120,200 A70,70 0 1,0 120,20 Z" fill="url(#moonGradient)" filter="url(#glow)" transform="rotate(-15 120 120)" className="animate-[pulse_4s_ease-in-out_infinite]" />
+
+        {/* --- NEW FULLER, LONGER, SOFTER HAIR LAYERS --- */}
+        
+        {/* Layer 1: Deepest, widest back hair (blurred for depth) */}
+        <path 
+          d="M50,70 C10,130 -10,200 40,230 C90,250 160,250 200,230 C250,200 230,130 190,70" 
+          fill="url(#hairGradientDeep)" 
+          filter="url(#softHairBlur)"
+          opacity="0.7"
+        />
+
+        {/* Layer 2: Main Body Waves (Long and flowing) */}
+        <path 
+          d="M60,60 C20,120 10,180 50,210 C100,240 150,240 190,210 C230,180 220,120 180,60" 
+          fill="url(#hairGradientMain)" 
+        />
+
+         {/* Layer 3: Mid-flow texture strands */}
+         <path 
+          d="M40,150 C60,180 80,200 110,190 M200,150 C180,180 160,200 130,190" 
+          stroke="#4338ca" strokeWidth="3" fill="none" opacity="0.3" strokeLinecap="round" filter="url(#glow)"
+        />
+
+        {/* --- DRESS --- */}
+        <path d="M60,150 Q110,140 160,150 L180,230 L40,230 Z" fill="#312e81" />
         <circle cx="80" cy="180" r="1.5" fill="white" opacity="0.6" className="animate-pulse"/>
         <circle cx="140" cy="190" r="2" fill="white" opacity="0.6" className="animate-pulse" style={{animationDelay:'1s'}}/>
 
-        <ellipse cx="110" cy="105" rx="55" ry="60" fill="#ffe4e6" />
-        <path d="M95,160 L95,170 L125,170 L125,160" fill="#ffe4e6" />
+        {/* --- HEAD & FACE (Slightly refined shape) --- */}
+        {/* Neck */}
+        <path d="M95,160 L95,175 L125,175 L125,160" fill="#ffe4e6" />
+        {/* Face */}
+        <ellipse cx="110" cy="105" rx="52" ry="58" fill="#ffe4e6" />
         <ellipse cx="75" cy="115" rx="8" ry="4" fill="#fda4af" opacity="0.4" filter="url(#glow)" />
         <ellipse cx="145" cy="115" rx="8" ry="4" fill="#fda4af" opacity="0.4" filter="url(#glow)" />
 
         {expressions.eyes[mood]}
         {expressions.mouth[mood]}
 
-        <path d="M55,110 C50,50 110,40 165,110 C165,60 110,60 55,110 Z" fill="url(#hairGradient)" />
-        <path d="M80,65 Q110,60 140,65" stroke="#8D6E63" strokeWidth="3" fill="none" opacity="0.5" strokeLinecap="round" />
+        {/* --- FRONT HAIR (FACE FRAMING & BANGS) --- */}
+        {/* Softly curving bangs that frame the face better */}
+        <path 
+          d="M50,105 C45,40 100,35 165,105 C175,50 110,25 50,60 Z" 
+          fill="url(#hairGradientMain)"
+          opacity="0.95"
+        />
+         {/* Side strands framing cheeks */}
+        <path d="M52,100 C45,130 55,160 70,180" stroke="url(#hairGradientMain)" strokeWidth="8" fill="none" strokeLinecap="round" />
+        <path d="M168,100 C175,130 165,160 150,180" stroke="url(#hairGradientMain)" strokeWidth="8" fill="none" strokeLinecap="round" />
 
-        <g transform="translate(10, 20)">
-           <circle cx="140" cy="160" r="12" fill="#ffe4e6" stroke="#fb7185" strokeWidth="0.5"/>
-           <path d="M140,160 Q160,120 180,90 Q170,100 165,120 Q155,140 140,160" fill="url(#featherGradient)" filter="url(#glow)" className="origin-[140px_160px] animate-[bounce_3s_infinite]" />
+
+        {/* Top Wisps for softness */}
+        <path d="M70,50 Q110,40 150,50" stroke="#818cf8" strokeWidth="2" fill="none" opacity="0.4" strokeLinecap="round" filter="url(#glow)"/>
+
+        {/* --- HAND & FEATHER --- */}
+        <g transform="translate(10, 25)">
+           <circle cx="140" cy="160" r="11" fill="#ffe4e6" stroke="#fb7185" strokeWidth="0.5"/>
+           <path d="M140,160 Q160,120 185,85 Q175,95 170,115 Q160,140 140,160" fill="url(#featherGradient)" filter="url(#glow)" className="origin-[140px_160px] animate-[bounce_3s_infinite]" />
            <path d="M140,160 L142,165" stroke="#333" strokeWidth="2" />
         </g>
         
-        <circle cx="170" cy="80" r="2" fill="white" className="animate-pulse" filter="url(#glow)" />
-        <circle cx="50" cy="150" r="1.5" fill="white" className="animate-pulse" style={{animationDelay:'0.5s'}} />
+        {/* Floating Magic Particles */}
+        <circle cx="180" cy="70" r="2" fill="white" className="animate-pulse" filter="url(#glow)" />
+        <circle cx="40" cy="160" r="1.5" fill="white" className="animate-pulse" style={{animationDelay:'0.5s'}} filter="url(#glow)" />
       </svg>
 
       <div className="absolute inset-0 flex items-end justify-center pb-8 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
@@ -222,7 +273,6 @@ const App: React.FC = () => {
       <Navigation onHome={goHome} onFinalQuiz={() => setShowFinalQuiz(true)} />
       
       {!showFinalQuiz && (
-        // REDUCED PADDING AND FLEX LAYOUT FOR COMPACT HEADER
         <header className="relative pt-28 pb-12 px-6 lg:px-8 max-w-7xl mx-auto overflow-hidden">
           <div className="absolute top-0 right-0 -z-10 w-[800px] h-[800px] bg-indigo-50 rounded-full blur-[140px] opacity-70"></div>
           <div className="absolute -bottom-40 -left-40 -z-10 w-[700px] h-[700px] bg-rose-50 rounded-full blur-[120px] opacity-60"></div>
