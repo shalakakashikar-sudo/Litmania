@@ -8,119 +8,118 @@ import Quiz from './components/Quiz';
 
 type LunaMood = 'neutral' | 'surprised' | 'sad' | 'winking';
 
-// --- THE NEW HARDCODED MASCOT COMPONENT ---
+// --- THE DREAMY LUNA MASCOT (WITH MOON & FEATHER) ---
 const LunaMascot: React.FC<{ mood: LunaMood; onClick: () => void }> = ({ mood, onClick }) => {
-  // SVG Paths for different expression parts
+  
+  // --- Reusable Facial Features ---
+  const eyeBase = (
+    <g>
+      <circle cx="85" cy="95" r="11" fill="white" />
+      <circle cx="85" cy="95" r="9" fill="url(#eyeGradient)" stroke="#312e81" strokeWidth="0.5" />
+      <circle cx="85" cy="98" r="4" fill="#1e1b4b" />
+      <circle cx="82" cy="92" r="3" fill="white" filter="url(#glow)" />
+      <circle cx="88" cy="98" r="1.5" fill="white" opacity="0.7" />
+    </g>
+  );
+
   const expressions = {
     eyes: {
       neutral: (
-        <g fill="#4F46E5">
-          <circle cx="75" cy="95" r="8" />
-          <circle cx="125" cy="95" r="8" />
-          {/* Sparkles */}
-          <circle cx="78" cy="92" r="3" fill="white" />
-          <circle cx="128" cy="92" r="3" fill="white" />
+        <g>
+          <g transform="translate(0,0)">{eyeBase}</g>
+          <g transform="translate(50,0)">{eyeBase}</g>
         </g>
       ),
       surprised: (
-        <g fill="#4F46E5">
-          <circle cx="75" cy="95" r="10" />
-          <circle cx="125" cy="95" r="10" />
-          <circle cx="78" cy="92" r="4" fill="white" />
-          <circle cx="128" cy="92" r="4" fill="white" />
+        <g>
+           <g transform="translate(0,-2)">{eyeBase}</g>
+           <g transform="translate(50,-2)">{eyeBase}</g>
+           <path d="M78 80 Q85 75 92 80" stroke="#4338ca" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.6"/>
+           <path d="M128 80 Q135 75 142 80" stroke="#4338ca" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.6"/>
         </g>
       ),
       sad: (
-        <g fill="#4F46E5">
-          <path d="M65 100 Q75 90 85 100" stroke="#4F46E5" strokeWidth="3" fill="none" />
-          <path d="M115 100 Q125 90 135 100" stroke="#4F46E5" strokeWidth="3" fill="none" />
-          {/* Tear */}
-          <circle cx="65" cy="110" r="3" fill="#60A5FA" opacity="0.8" />
+        <g>
+          <g transform="translate(0,2)">{eyeBase}</g>
+          <g transform="translate(50,2)">{eyeBase}</g>
+          <path d="M74 90 Q85 100 96 90" fill="#ffe4e6" />
+          <path d="M124 90 Q135 100 146 90" fill="#ffe4e6" />
+          <circle cx="80" cy="110" r="2.5" fill="#bae6fd" opacity="0.8" className="animate-pulse"/>
         </g>
       ),
       winking: (
         <g>
-           {/* Left Eye Open */}
-          <circle cx="75" cy="95" r="8" fill="#4F46E5" />
-          <circle cx="78" cy="92" r="3" fill="white" />
-          {/* Right Eye Wink */}
-          <path d="M115 95 Q125 105 135 95" stroke="#4F46E5" strokeWidth="4" fill="none" />
+           <g transform="translate(0,0)">{eyeBase}</g>
+           <path d="M128 98 Q135 105 142 98" stroke="#312e81" strokeWidth="3" fill="none" strokeLinecap="round" />
         </g>
       )
     },
     mouth: {
-      neutral: <path d="M90 125 Q100 130 110 125" stroke="#4F46E5" strokeWidth="3" strokeLinecap="round" fill="none" />,
-      surprised: <circle cx="100" cy="130" r="6" stroke="#4F46E5" strokeWidth="3" fill="none" />,
-      sad: <path d="M90 135 Q100 125 110 135" stroke="#4F46E5" strokeWidth="3" strokeLinecap="round" fill="none" />,
-      winking: <path d="M90 125 Q100 135 110 125" stroke="#4F46E5" strokeWidth="3" strokeLinecap="round" fill="none" />
+      neutral: <path d="M105 125 Q110 128 115 125" stroke="#be123c" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.6" />,
+      surprised: <circle cx="110" cy="128" r="4" stroke="#be123c" strokeWidth="2" fill="none" opacity="0.6" />,
+      sad: <path d="M105 130 Q110 125 115 130" stroke="#be123c" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.6" />,
+      winking: <path d="M105 125 Q110 130 115 122" stroke="#be123c" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.6" />
     }
   };
 
   return (
-    <div className="relative group cursor-pointer w-64 h-64 md:w-80 md:h-80 xl:w-[450px] xl:h-[450px]" onClick={onClick}>
-      {/* Container for the SVG */}
-      <svg viewBox="0 0 200 200" className="w-full h-full drop-shadow-2xl transition-transform duration-500 group-hover:scale-105">
+    <div className="relative group cursor-pointer w-48 h-48 md:w-72 md:h-72 lg:w-[420px] lg:h-[420px] transition-all duration-500" onClick={onClick}>
+      <svg viewBox="0 0 220 220" className="w-full h-full drop-shadow-2xl transition-transform duration-500 group-hover:scale-105 overflow-visible">
         <defs>
-          <linearGradient id="moonGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#FEF3C7" />
-            <stop offset="100%" stopColor="#F59E0B" />
+          <linearGradient id="moonGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#fef3c7" />
+            <stop offset="100%" stopColor="#fcd34d" />
           </linearGradient>
-          <linearGradient id="hairGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#4338ca" />
+          <radialGradient id="hairGradient" cx="50%" cy="20%" r="80%">
+             <stop offset="0%" stopColor="#5B4034" />
+             <stop offset="100%" stopColor="#3E2723" />
+          </radialGradient>
+          <radialGradient id="eyeGradient" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#6366f1" />
             <stop offset="100%" stopColor="#312e81" />
+          </radialGradient>
+          <linearGradient id="featherGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+             <stop offset="0%" stopColor="#ffffff" />
+             <stop offset="100%" stopColor="#e2e8f0" />
           </linearGradient>
-          <filter id="glow">
-            <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+           <filter id="glow">
+            <feGaussianBlur stdDeviation="2" result="coloredBlur" />
             <feMerge>
-              <feMergeNode in="coloredBlur"/>
-              <feMergeNode in="SourceGraphic"/>
+              <feMergeNode in="coloredBlur" />
+              <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
         </defs>
 
-        {/* Crescent Moon Background */}
-        <path 
-          d="M100,20 A80,80 0 1,1 100,180 A60,60 0 1,0 100,20 Z" 
-          fill="url(#moonGradient)" 
-          className="animate-[pulse_4s_ease-in-out_infinite]"
-        />
+        <path d="M110,10 A90,90 0 1,1 110,190 A70,70 0 1,0 110,10 Z" fill="url(#moonGradient)" filter="url(#glow)" transform="rotate(-15 110 110)" className="animate-[pulse_4s_ease-in-out_infinite]" />
+        <path d="M60,80 Q30,120 20,160 Q60,180 110,170 Q160,180 200,160 Q190,120 160,80" fill="url(#hairGradient)" />
+        <path d="M60,150 Q110,140 160,150 L180,220 L40,220 Z" fill="#312e81" />
+        <circle cx="80" cy="180" r="1.5" fill="white" opacity="0.6" className="animate-pulse"/>
+        <circle cx="140" cy="190" r="2" fill="white" opacity="0.6" className="animate-pulse" style={{animationDelay:'1s'}}/>
 
-        {/* Back Hair (Flowing) */}
-        <path 
-          d="M60,80 Q40,120 30,160 Q70,180 100,160 Q130,180 170,160 Q160,120 140,80" 
-          fill="url(#hairGradient)" 
-        />
+        <ellipse cx="110" cy="105" rx="55" ry="60" fill="#ffe4e6" />
+        <path d="M95,160 L95,170 L125,170 L125,160" fill="#ffe4e6" />
+        <ellipse cx="75" cy="115" rx="8" ry="4" fill="#fda4af" opacity="0.4" filter="url(#glow)" />
+        <ellipse cx="145" cy="115" rx="8" ry="4" fill="#fda4af" opacity="0.4" filter="url(#glow)" />
 
-        {/* Face Shape */}
-        <ellipse cx="100" cy="100" rx="45" ry="50" fill="#FFE4E6" />
-        
-        {/* Bangs / Front Hair */}
-        <path 
-          d="M55,100 Q50,60 100,50 Q150,60 145,100 Q140,70 100,75 Q60,70 55,100" 
-          fill="url(#hairGradient)" 
-        />
-
-        {/* Cheeks (Blush) */}
-        <ellipse cx="70" cy="110" rx="6" ry="3" fill="#F472B6" opacity="0.4" />
-        <ellipse cx="130" cy="110" rx="6" ry="3" fill="#F472B6" opacity="0.4" />
-
-        {/* Dynamic Expressions */}
         {expressions.eyes[mood]}
         {expressions.mouth[mood]}
 
-        {/* Floating Stars Decoration */}
-        <g className="animate-[bounce_3s_infinite]" style={{ transformOrigin: 'center' }}>
-           <path d="M160 40 L162 45 L167 45 L163 48 L164 53 L160 50 L156 53 L157 48 L153 45 L158 45 Z" fill="#FCD34D" />
-        </g>
-        <g className="animate-[bounce_4s_infinite]" style={{ transformOrigin: 'center', animationDelay: '1s' }}>
-           <path d="M40 150 L42 155 L47 155 L43 158 L44 163 L40 160 L36 163 L37 158 L33 155 L38 155 Z" fill="#FCD34D" />
-        </g>
+        <path d="M55,110 C50,50 110,40 165,110 C165,60 110,60 55,110 Z" fill="url(#hairGradient)" />
+        <path d="M80,65 Q110,60 140,65" stroke="#8D6E63" strokeWidth="3" fill="none" opacity="0.5" strokeLinecap="round" />
 
+        <g transform="translate(10, 20)">
+           <circle cx="140" cy="160" r="12" fill="#ffe4e6" stroke="#fb7185" strokeWidth="0.5"/>
+           <path d="M140,160 Q160,120 180,90 Q170,100 165,120 Q155,140 140,160" fill="url(#featherGradient)" filter="url(#glow)" className="origin-[140px_160px] animate-[bounce_3s_infinite]" />
+           <path d="M140,160 L142,165" stroke="#333" strokeWidth="2" />
+        </g>
+        
+        <circle cx="170" cy="80" r="2" fill="white" className="animate-pulse" filter="url(#glow)" />
+        <circle cx="50" cy="150" r="1.5" fill="white" className="animate-pulse" style={{animationDelay:'0.5s'}} />
       </svg>
 
-      {/* Hover Text */}
       <div className="absolute inset-0 flex items-end justify-center pb-8 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-        <span className="bg-black/80 text-white text-[10px] px-3 py-1 rounded-full uppercase tracking-widest backdrop-blur-sm">
+        <span className="bg-indigo-900/80 text-indigo-100 text-[10px] px-4 py-1.5 rounded-full uppercase tracking-widest backdrop-blur-md shadow-lg border border-indigo-300/30">
           Change Mood
         </span>
       </div>
@@ -128,7 +127,7 @@ const LunaMascot: React.FC<{ mood: LunaMood; onClick: () => void }> = ({ mood, o
   );
 };
 
-// --- MAIN APP ---
+// --- MAIN APP COMPONENT ---
 
 const App: React.FC = () => {
   const [selectedDevice, setSelectedDevice] = useState<LiteraryDevice | null>(null);
@@ -136,8 +135,6 @@ const App: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<Category | 'All'>('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [isScrolled, setIsScrolled] = useState(false);
-  
-  // Mascot state
   const [lunaMood, setLunaMood] = useState<LunaMood>('neutral');
 
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -156,62 +153,35 @@ const App: React.FC = () => {
   }, [activeCategory, searchQuery]);
 
   const allQuestions = useMemo(() => 
-    LITERARY_DEVICES
-      .filter(d => d.quiz && d.quiz.length > 0)
-      .flatMap(d => d.quiz), 
+    LITERARY_DEVICES.filter(d => d.quiz && d.quiz.length > 0).flatMap(d => d.quiz), 
   []);
 
   const navigateDevice = (direction: 'next' | 'prev') => {
     if (!selectedDevice) return;
     const currentIndex = filteredDevices.findIndex(d => d.id === selectedDevice.id);
     if (currentIndex === -1) return;
-
-    let nextIndex;
-    if (direction === 'next') {
-      nextIndex = (currentIndex + 1) % filteredDevices.length;
-    } else {
-      nextIndex = (currentIndex - 1 + filteredDevices.length) % filteredDevices.length;
-    }
+    let nextIndex = direction === 'next' ? (currentIndex + 1) % filteredDevices.length : (currentIndex - 1 + filteredDevices.length) % filteredDevices.length;
     setSelectedDevice(filteredDevices[nextIndex]);
   };
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-          }
-        });
-      },
-      { threshold: 0.1, rootMargin: '0px 0px -100px 0px' }
-    );
-
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+      }, { threshold: 0.1, rootMargin: '0px 0px -100px 0px' });
     const cards = document.querySelectorAll('.reveal-card');
     cards.forEach((card) => observer.observe(card));
-
     return () => observer.disconnect();
   }, [filteredDevices, showFinalQuiz]);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 300);
-    };
-    
+    const handleScroll = () => setIsScrolled(window.scrollY > 300);
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === '/' && document.activeElement !== searchInputRef.current) {
         e.preventDefault();
         searchInputRef.current?.focus();
-        const searchBox = searchInputRef.current?.parentElement;
-        if (searchBox) {
-            window.scrollTo({ 
-              top: searchBox.getBoundingClientRect().top + window.scrollY - 150, 
-              behavior: 'smooth' 
-            });
-        }
+        window.scrollTo({ top: searchInputRef.current?.parentElement?.getBoundingClientRect().top! + window.scrollY - 150, behavior: 'smooth' });
       }
     };
-
     window.addEventListener('scroll', handleScroll);
     window.addEventListener('keydown', handleKeyDown);
     return () => {
@@ -229,51 +199,22 @@ const App: React.FC = () => {
   };
 
   const scrollToLibrary = () => {
-    if (libraryRef.current) {
-      window.scrollTo({
-        top: libraryRef.current.offsetTop - 120,
-        behavior: 'smooth'
-      });
-    }
+    if (libraryRef.current) window.scrollTo({ top: libraryRef.current.offsetTop - 120, behavior: 'smooth' });
   };
 
-  useEffect(() => {
-    if (searchQuery && window.scrollY < 400) {
-      scrollToLibrary();
-    }
-  }, [searchQuery]);
+  useEffect(() => { if (searchQuery && window.scrollY < 400) scrollToLibrary(); }, [searchQuery]);
+  useEffect(() => { if (showFinalQuiz) window.scrollTo({ top: 0, behavior: 'smooth' }); }, [showFinalQuiz]);
 
-  useEffect(() => {
-    if (showFinalQuiz) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  }, [showFinalQuiz]);
-
-  // Mascot logic for handling click-to-change mood
   const cycleMood = () => {
     const moods: LunaMood[] = ['neutral', 'surprised', 'sad', 'winking'];
-    const currentIndex = moods.indexOf(lunaMood);
-    const nextMood = moods[(currentIndex + 1) % moods.length];
-    setLunaMood(nextMood);
+    setLunaMood(moods[(moods.indexOf(lunaMood) + 1) % moods.length]);
   };
 
   const moodConfig = {
-    neutral: {
-      quote: "In the moonlit halls of the mind, every device is a master key.",
-      subtitle: "The Librarian of Dreams"
-    },
-    surprised: {
-      quote: "Aha! A hidden layer of meaning revealed itself!",
-      subtitle: "The Astonished Sage"
-    },
-    sad: {
-      quote: "Even tragedy is beautiful when carved with the right words.",
-      subtitle: "The Melancholic Poet"
-    },
-    winking: {
-      quote: "Every metaphor is a secret shared between us.",
-      subtitle: "The Playful Archivist"
-    }
+    neutral: { quote: "Every device is a master key.", subtitle: "The Librarian of Dreams" },
+    surprised: { quote: "A hidden meaning revealed!", subtitle: "The Astonished Sage" },
+    sad: { quote: "Tragedy carved in words.", subtitle: "The Melancholic Poet" },
+    winking: { quote: "A secret shared between us.", subtitle: "The Playful Archivist" }
   };
 
   return (
@@ -281,72 +222,66 @@ const App: React.FC = () => {
       <Navigation onHome={goHome} onFinalQuiz={() => setShowFinalQuiz(true)} />
       
       {!showFinalQuiz && (
-        <header className="relative pt-64 pb-24 px-8 max-w-7xl mx-auto overflow-hidden">
+        // REDUCED PADDING AND FLEX LAYOUT FOR COMPACT HEADER
+        <header className="relative pt-28 pb-12 px-6 lg:px-8 max-w-7xl mx-auto overflow-hidden">
           <div className="absolute top-0 right-0 -z-10 w-[800px] h-[800px] bg-indigo-50 rounded-full blur-[140px] opacity-70"></div>
           <div className="absolute -bottom-40 -left-40 -z-10 w-[700px] h-[700px] bg-rose-50 rounded-full blur-[120px] opacity-60"></div>
           
-          <div className="text-center flex flex-col items-center">
+          <div className="flex flex-col lg:flex-row items-center lg:items-center justify-center gap-8 lg:gap-20">
             
-            {/* The Litmania Muse: Luna (SVG Version) */}
-            <div className="relative mb-16 animate-in fade-in slide-in-from-bottom-8 duration-1000 flex flex-col items-center">
+            {/* LEFT SIDE: LUNA MASCOT */}
+            <div className="relative animate-in fade-in slide-in-from-bottom-8 duration-1000 flex-shrink-0 flex flex-col items-center">
                <div className="absolute inset-[-40px] bg-gradient-to-tr from-indigo-100 via-rose-100 to-amber-100 rounded-full blur-[60px] opacity-60 animate-pulse"></div>
-               
-               {/* Replaced Image with SVG Component */}
                <LunaMascot mood={lunaMood} onClick={cycleMood} />
-
-                {/* Luna's Nameplate */}
-                <div className="relative -mt-10 flex flex-col items-center gap-3 z-10">
-                  <div className="bg-black text-white px-12 py-4 rounded-full font-black tracking-[0.5em] text-xs md:text-sm shadow-[0_20px_40px_rgba(0,0,0,0.3)] whitespace-nowrap uppercase transform hover:scale-110 transition-transform cursor-pointer" onClick={cycleMood}>
+                <div className="relative -mt-6 flex flex-col items-center gap-2 z-10">
+                  <div className="bg-black text-white px-8 py-2 rounded-full font-black tracking-[0.4em] text-[10px] md:text-xs shadow-xl uppercase transform hover:scale-110 transition-transform cursor-pointer" onClick={cycleMood}>
                     LUNA
                   </div>
-                  <div className="text-[9px] md:text-[11px] font-black tracking-[0.3em] text-slate-500 uppercase whitespace-nowrap bg-white/90 backdrop-blur-md px-6 py-2 rounded-xl border border-slate-100 shadow-sm transition-all duration-500">
+                  <div className="text-[9px] font-black tracking-[0.2em] text-slate-500 uppercase bg-white/90 backdrop-blur-md px-4 py-1.5 rounded-lg border border-slate-100 shadow-sm">
                     {moodConfig[lunaMood].subtitle}
                   </div>
                 </div>
             </div>
 
-            <p className="max-w-3xl mx-auto text-2xl md:text-4xl font-serif-elegant italic text-slate-900 leading-tight mb-20 mt-8 font-black tracking-tight drop-shadow-sm h-24 flex items-center justify-center">
-              "{moodConfig[lunaMood].quote}"
-            </p>
-            
-            <div className="max-w-3xl mx-auto mb-20 w-full relative group">
-              <input 
-                ref={searchInputRef}
-                type="text"
-                placeholder="Consult the library... (Press '/' to search)"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-12 py-8 rounded-[3rem] bg-white border-4 border-slate-200 shadow-2xl focus:ring-8 focus:ring-indigo-100 transition-all outline-none text-2xl font-black group-hover:border-black"
-              />
-              <div className="absolute right-10 top-1/2 -translate-y-1/2 flex items-center gap-6">
-                {searchQuery && (
-                   <button onClick={() => setSearchQuery('')} className="p-3 text-slate-400 hover:text-black transition-colors">
-                     <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" d="M6 18L18 6M6 6l12 12" /></svg>
-                   </button>
-                )}
-                <div className="text-black">
-                  <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-                </div>
-              </div>
-            </div>
+            {/* RIGHT SIDE: CONTROLS & QUOTE */}
+            <div className="flex flex-col items-center lg:items-start text-center lg:text-left w-full max-w-2xl z-10">
+               <h1 className="text-4xl lg:text-6xl font-serif-elegant font-black italic text-slate-900 leading-tight mb-4 drop-shadow-sm">
+                  "{moodConfig[lunaMood].quote}"
+               </h1>
+               
+               <p className="text-slate-500 mb-8 font-medium">Click Luna to change her mood & inspiration.</p>
+              
+               <div className="w-full relative group mb-8">
+                  <input 
+                    ref={searchInputRef}
+                    type="text"
+                    placeholder="Search literary devices..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full px-8 py-5 rounded-2xl bg-white border-2 border-slate-200 shadow-xl focus:ring-4 focus:ring-indigo-100 transition-all outline-none text-xl font-bold group-hover:border-indigo-300"
+                  />
+                  <div className="absolute right-6 top-1/2 -translate-y-1/2 text-slate-400">
+                    {searchQuery ? (
+                       <button onClick={() => setSearchQuery('')} className="hover:text-black">✕</button>
+                    ) : (
+                       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                    )}
+                  </div>
+               </div>
 
-            <div className="flex flex-wrap justify-center gap-4 sm:gap-6 mb-24 px-4">
-              {categories.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => {
-                    setActiveCategory(cat as Category | 'All');
-                    setTimeout(scrollToLibrary, 50);
-                  }}
-                  className={`px-8 py-4 sm:px-10 sm:py-5 rounded-full text-xs sm:text-sm font-black tracking-[0.2em] transition-all duration-300 border-4 ${
-                    activeCategory === cat 
-                      ? 'bg-black text-white border-black shadow-2xl scale-110' 
-                      : 'bg-white text-black border-slate-200 hover:border-black'
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
+               <div className="flex flex-wrap justify-center lg:justify-start gap-3">
+                  {categories.map((cat) => (
+                    <button
+                      key={cat}
+                      onClick={() => { setActiveCategory(cat as Category | 'All'); setTimeout(scrollToLibrary, 50); }}
+                      className={`px-6 py-2 rounded-full text-xs font-bold tracking-wider transition-all duration-300 border-2 ${
+                        activeCategory === cat ? 'bg-black text-white border-black shadow-lg transform scale-105' : 'bg-white text-slate-600 border-slate-200 hover:border-indigo-300'
+                      }`}
+                    >
+                      {cat}
+                    </button>
+                  ))}
+               </div>
             </div>
           </div>
         </header>
@@ -358,84 +293,44 @@ const App: React.FC = () => {
             {filteredDevices.length > 0 ? (
               filteredDevices.map((device) => (
                 <div key={device.id} className="reveal-card">
-                  <DeviceCard 
-                    device={device} 
-                    onClick={(d) => setSelectedDevice(d)} 
-                  />
+                  <DeviceCard device={device} onClick={(d) => setSelectedDevice(d)} />
                 </div>
               ))
             ) : (
-              <div className="col-span-full py-64 text-center animate-in fade-in zoom-in-95 duration-500">
-                <div className="text-[12rem] mb-16 opacity-40">🌙</div>
-                <h3 className="text-5xl sm:text-7xl font-serif-elegant text-black mb-8 italic font-black">Luna cannot find that tome.</h3>
-                <p className="text-2xl sm:text-4xl text-slate-800 font-classic font-black">Try a different term or clear your filters.</p>
-                <button 
-                  onClick={() => {setSearchQuery(''); setActiveCategory('All');}}
-                  className="mt-16 text-indigo-800 font-black text-2xl sm:text-3xl hover:underline decoration-4 underline-offset-8"
-                >
-                  Restore the library
-                </button>
+              <div className="col-span-full py-32 text-center opacity-60">
+                <div className="text-8xl mb-4">🌙</div>
+                <h3 className="text-2xl font-bold">Luna cannot find that tome.</h3>
+                <button onClick={() => {setSearchQuery(''); setActiveCategory('All');}} className="mt-4 text-indigo-600 font-bold underline">Clear Filters</button>
               </div>
             )}
           </div>
         </main>
       ) : (
-        <main className="pt-64 px-8 reveal-card visible">
-          <div className="max-w-6xl mx-auto space-y-16">
-            <div className="flex justify-start">
-              <button 
-                onClick={goHome}
-                className="flex items-center gap-6 px-10 py-5 bg-black text-white rounded-[2.5rem] hover:scale-105 transition-all font-black text-xl shadow-2xl"
-              >
-                <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
-                Return to Luna's Sanctuary
-              </button>
-            </div>
-            <div className="glass rounded-[4rem] sm:rounded-[6rem] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.3)] border-[6px] sm:border-[12px] border-slate-50">
-              <Quiz 
-                title="The Grand Archivist's Mastery Quiz"
-                questions={allQuestions}
-                onComplete={(score) => {
-                  goHome();
-                }}
-              />
+        <main className="pt-32 px-8 reveal-card visible">
+           <div className="max-w-6xl mx-auto space-y-16">
+            <button onClick={goHome} className="flex items-center gap-4 px-8 py-4 bg-black text-white rounded-full font-bold shadow-xl hover:scale-105 transition-transform">
+               <span>←</span> Return to Library
+            </button>
+            <div className="glass rounded-[3rem] overflow-hidden shadow-2xl border-4 border-slate-50">
+              <Quiz title="The Grand Archivist's Mastery Quiz" questions={allQuestions} onComplete={(score) => goHome()} />
             </div>
           </div>
         </main>
       )}
 
       {selectedDevice && (
-        <InfographicModal 
-          device={selectedDevice} 
-          onClose={() => setSelectedDevice(null)} 
-          onPrev={() => navigateDevice('prev')}
-          onNext={() => navigateDevice('next')}
-        />
+        <InfographicModal device={selectedDevice} onClose={() => setSelectedDevice(null)} onPrev={() => navigateDevice('prev')} onNext={() => navigateDevice('next')} />
       )}
 
-      <div className="fixed top-1/4 left-10 w-20 h-20 rounded-full bg-indigo-400 opacity-20 animated-float pointer-events-none"></div>
-      <div className="fixed top-1/2 right-20 w-32 h-32 rounded-full bg-rose-400 opacity-15 animated-float pointer-events-none" style={{animationDelay: '1s'}}></div>
-      <div className="fixed bottom-20 left-1/3 w-24 h-24 rounded-full bg-amber-400 opacity-15 animated-float pointer-events-none" style={{animationDelay: '2s'}}></div>
-
-      {isScrolled && (
-        <button 
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="fixed bottom-32 sm:bottom-40 right-8 sm:right-16 z-[90] p-6 sm:p-8 bg-black text-white rounded-full shadow-2xl hover:scale-110 transition-all active:scale-95 animate-in fade-in slide-in-from-bottom-12"
-        >
-          <svg className="w-8 h-8 sm:w-12 sm:h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" d="M5 10l7-7m0 0l7 7m-7-7v18" /></svg>
-        </button>
-      )}
-
-      {/* Creator Credits Section */}
-      <div className="fixed bottom-6 right-6 lg:bottom-10 lg:right-10 z-[100] px-4 py-2 glass border-2 border-indigo-100 rounded-2xl shadow-xl group hover:bg-black transition-all pointer-events-auto scale-90">
-        <span className="text-[7px] uppercase tracking-[0.4em] text-indigo-800 font-black block leading-none mb-1 group-hover:text-white transition-colors">Created by</span>
-        <span className="text-xs font-serif-elegant font-black text-black group-hover:text-white leading-none block">Shalaka Kashikar</span>
+      <div className="fixed bottom-6 right-6 z-[100] px-4 py-2 glass border border-indigo-100 rounded-xl shadow-lg opacity-80 hover:opacity-100 transition-opacity">
+        <span className="text-[10px] uppercase font-bold text-indigo-900">Created by Shalaka Kashikar</span>
       </div>
 
-      <footer className="mt-64 border-t-8 border-slate-100 pt-48 pb-48 px-8 max-w-7xl mx-auto text-center">
-        <div className="text-7xl sm:text-9xl font-serif-elegant font-black text-slate-100 mb-12">Litmania</div>
-        <div className="text-slate-400 text-xs sm:text-sm tracking-[0.8em] uppercase mb-12 font-black">The Sanctuary of Literary Virtuosos</div>
-      </footer>
+      {isScrolled && !showFinalQuiz && (
+        <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="fixed bottom-24 right-6 z-[90] p-4 bg-black text-white rounded-full shadow-xl hover:scale-110 transition-transform">
+          ↑
+        </button>
+      )}
     </div>
   );
 };
