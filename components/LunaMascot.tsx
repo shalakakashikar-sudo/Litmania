@@ -10,21 +10,19 @@ interface LunaMascotProps {
 const LunaMascot: React.FC<LunaMascotProps> = ({ mood, onClick }) => {
   const [isSleeping, setIsSleeping] = useState(false);
 
-  // --- IDLE TIMER LOGIC ---
+  // --- IDLE TIMER LOGIC (Fixes TS2503: NodeJS namespace error) ---
   useEffect(() => {
-    let idleTimer: NodeJS.Timeout;
+    let idleTimer: any;
 
     const resetTimer = () => {
       setIsSleeping(false);
       clearTimeout(idleTimer);
-      // Set to sleep after 5 seconds of inactivity
-      idleTimer = setTimeout(() => setIsSleeping(true), 5000); 
+      // Set to sleep after 10 seconds of inactivity for a more peaceful vibe
+      idleTimer = setTimeout(() => setIsSleeping(true), 10000); 
     };
 
-    // Initialize timer
     resetTimer();
 
-    // Reset on interactions
     window.addEventListener('click', resetTimer);
     window.addEventListener('mousemove', resetTimer);
 
@@ -33,61 +31,68 @@ const LunaMascot: React.FC<LunaMascotProps> = ({ mood, onClick }) => {
       window.removeEventListener('click', resetTimer);
       window.removeEventListener('mousemove', resetTimer);
     };
-  }, [mood]); // Reset if mood changes externally
+  }, [mood]);
 
-  // Wrapper for parent click that also wakes her up immediately
   const handleInteraction = () => {
     setIsSleeping(false);
     onClick();
   };
 
-  // --- COMPONENT: The Jewel Eye ---
-  const JewelEye = ({ isLeft, isWinking, isClosed }: { isLeft: boolean, isWinking?: boolean, isClosed?: boolean }) => {
-    // Closed / Sleeping Eye
+  // --- COMPONENT: Ultra-Kawaii Chibi Jewel Eye ---
+  // Fixes TS6133 by removing unused isLeft parameter
+  const ChibiEye = ({ isWinking, isClosed }: { isWinking?: boolean; isClosed?: boolean }) => {
     if (isClosed) {
-       return (
-         <path d="M-18,5 Q0,15 18,5" stroke="#5d4037" strokeWidth="3" fill="none" strokeLinecap="round" opacity="0.8" />
-       );
+      return (
+        <g transform="translate(0, 8)">
+           <path d="M-18,0 Q0,10 18,0" stroke="#2d1b0d" strokeWidth="4" fill="none" strokeLinecap="round" opacity="0.6" />
+        </g>
+      );
     }
-    // Winking Eye
     if (isWinking) {
-      return <path d="M-15,0 Q0,10 15,0" stroke="#3f2e20" strokeWidth="3" fill="none" strokeLinecap="round" />;
+      return (
+        <g transform="translate(0, 5)">
+           <path d="M-18,0 Q0,12 18,0" stroke="#2d1b0d" strokeWidth="5" fill="none" strokeLinecap="round" />
+           <path d="M16,0 L22,-4" stroke="#2d1b0d" strokeWidth="3" fill="none" strokeLinecap="round" />
+        </g>
+      );
     }
-    // Open Eye
     return (
-      <g className="animate-[blink_4s_infinite]">
-        {/* Lashes */}
-        <path d="M-16,-2 Q0,-12 16,-2" stroke="#3f2e20" strokeWidth="4" fill="none" strokeLinecap="round" />
-        <path d="M16,-2 Q18,0 20,-2" stroke="#3f2e20" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.8"/>
+      <g className="animate-[pulse_4s_infinite]">
+        {/* Top Thick Lash Line */}
+        <path d="M-22,-5 Q0,-22 22,-5" stroke="#2d1b0d" strokeWidth="6" fill="none" strokeLinecap="round" />
         
-        {/* Sclera & Shape Masking */}
-        <g clipPath="url(#eyeClip)">
-            <rect x="-20" y="-15" width="40" height="30" fill="white" />
-            <circle cx="0" cy="0" r="9" fill="url(#eyeGradient)" />
-            <circle cx="0" cy="0" r="4" fill="#1a120b" />
-            <circle cx="0" cy="-3" r="8" fill="none" stroke="black" strokeWidth="0.5" opacity="0.2" />
+        {/* Side Lashes */}
+        <path d="M20,-8 Q25,-12 28,-10" stroke="#2d1b0d" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+        <path d="M22,-2 Q27,-4 30,-2" stroke="#2d1b0d" strokeWidth="2" fill="none" strokeLinecap="round" />
+
+        {/* The Iris Masked Group */}
+        <g clipPath="url(#chibiEyeClip)">
+            <rect x="-25" y="-20" width="50" height="40" fill="white" />
+            <circle cx="0" cy="2" r="16" fill="url(#chibiIrisGradient)" />
+            <circle cx="0" cy="6" r="8" fill="#6366f1" opacity="0.4" filter="url(#glow)" />
+            <circle cx="0" cy="4" r="7" fill="#1e1b4b" />
         </g>
         
-        {/* Highlights */}
-        <circle cx="-5" cy="-5" r="3" fill="white" filter="url(#glow)" />
-        <circle cx="4" cy="4" r="1.5" fill="white" opacity="0.7" />
+        {/* Large Kawaii Highlights */}
+        <circle cx="-8" cy="-6" r="5" fill="white" filter="url(#glow)" />
+        <circle cx="6" cy="8" r="2.5" fill="white" opacity="0.8" />
+        <circle cx="-2" cy="12" r="1.5" fill="white" opacity="0.6" />
       </g>
     );
   };
 
-  // --- EXPRESSION LOGIC ---
+  // --- CHIBI EXPRESSIONS ---
   const getExpression = () => {
-    // Priority: If sleeping, override everything
     if (isSleeping) {
       return {
-        leftEye: <JewelEye isLeft={true} isClosed={true} />,
-        rightEye: <JewelEye isLeft={false} isClosed={true} />,
-        mouth: <circle cx="0" cy="15" r="2" fill="#ec4899" opacity="0.5" />, // Small 'o' snore mouth
+        leftEye: <ChibiEye isClosed={true} />,
+        rightEye: <ChibiEye isClosed={true} />,
+        mouth: <circle cx="0" cy="25" r="3" fill="#f43f5e" opacity="0.5" />,
         brows: null,
         extra: (
-          <g className="animate-[float_3s_ease-in-out_infinite]">
-             <text x="30" y="-10" fontSize="14" fill="#8b5cf6" fontWeight="bold" opacity="0.7">Z</text>
-             <text x="40" y="-20" fontSize="10" fill="#8b5cf6" fontWeight="bold" opacity="0.5">z</text>
+          <g className="animate-[float_4s_ease-in-out_infinite]">
+             <text x="40" y="-10" fontSize="18" fill="#6366f1" fontWeight="bold" opacity="0.6" fontStyle="italic">Z</text>
+             <text x="55" y="-25" fontSize="12" fill="#6366f1" fontWeight="bold" opacity="0.4" fontStyle="italic">z</text>
           </g>
         )
       };
@@ -96,82 +101,87 @@ const LunaMascot: React.FC<LunaMascotProps> = ({ mood, onClick }) => {
     switch (mood) {
       case 'surprised':
         return {
-          leftEye: <JewelEye isLeft={true} />,
-          rightEye: <JewelEye isLeft={false} />,
-          mouth: <circle cx="0" cy="18" r="3" fill="#ec4899" opacity="0.6" />,
+          leftEye: <ChibiEye />,
+          rightEye: <ChibiEye />,
+          mouth: <circle cx="0" cy="25" r="5" fill="#f43f5e" opacity="0.7" />,
           brows: (
-            <g stroke="#8b4513" strokeWidth="2" fill="none" opacity="0.4">
-               <path d="M-30,-20 Q-20,-28 -10,-20" />
-               <path d="M10,-20 Q20,-28 30,-20" />
+            <g transform="translate(0, -10)">
+              <path d="M-35,-25 Q-20,-35 -5,-25" stroke="#4338ca" strokeWidth="3" fill="none" strokeLinecap="round" opacity="0.5" />
+              <path d="M5,-25 Q20,-35 35,-25" stroke="#4338ca" strokeWidth="3" fill="none" strokeLinecap="round" opacity="0.5" />
             </g>
           )
         };
       case 'sad':
         return {
-          leftEye: <g transform="translate(0, 2)"><JewelEye isLeft={true} /></g>,
-          rightEye: <g transform="translate(0, 2)"><JewelEye isLeft={false} /></g>,
-          mouth: <path d="M-6,22 Q0,18 6,22" stroke="#ec4899" strokeWidth="2" fill="none" opacity="0.6" />,
+          leftEye: <g transform="translate(0, 5)"><ChibiEye /></g>,
+          rightEye: <g transform="translate(0, 5)"><ChibiEye /></g>,
+          mouth: <path d="M-10,28 Q0,22 10,28" stroke="#f43f5e" strokeWidth="3" fill="none" strokeLinecap="round" opacity="0.8" />,
           brows: (
-             <g stroke="#8b4513" strokeWidth="2" fill="none" opacity="0.4">
-               <path d="M-30,-15 Q-20,-12 -10,-18" />
-               <path d="M10,-18 Q20,-12 30,-15" />
+             <g transform="translate(0, -5)">
+               <path d="M-35,-20 Q-20,-15 -5,-25" stroke="#4338ca" strokeWidth="3" fill="none" strokeLinecap="round" opacity="0.5" />
+               <path d="M5,-25 Q20,-15 35,-20" stroke="#4338ca" strokeWidth="3" fill="none" strokeLinecap="round" opacity="0.5" />
             </g>
           ),
-          tear: <circle cx="-12" cy="12" r="3" fill="#bae6fd" opacity="0.8" className="animate-bounce" />
-        };
-      case 'winking':
-        return {
-          leftEye: <JewelEye isLeft={true} />,
-          rightEye: <JewelEye isLeft={false} isWinking={true} />,
-          mouth: <path d="M-6,18 Q0,22 6,18" stroke="#ec4899" strokeWidth="2" fill="none" opacity="0.6" />,
-          brows: null
-        };
-      case 'excited':
-        return {
-          leftEye: <JewelEye isLeft={true} />,
-          rightEye: <JewelEye isLeft={false} />,
-          mouth: <path d="M-6,18 Q0,24 6,18" fill="#ec4899" opacity="0.6" />,
-          brows: null,
-          extra: (
-            <g className="animate-spin-slow origin-center">
-              <path d="M-40,-10 L-35,-10 M-37.5,-12.5 L-37.5,-7.5" stroke="#fbbf24" strokeWidth="2" />
-              <path d="M40,-10 L35,-10 M37.5,-12.5 L37.5,-7.5" stroke="#fbbf24" strokeWidth="2" />
+          tear: (
+            <g transform="translate(-15, 20)">
+               <circle cx="0" cy="0" r="4" fill="#bae6fd" filter="url(#glow)" className="animate-bounce" />
+               <path d="M-2,0 Q0,8 2,0" fill="#bae6fd" />
             </g>
           )
         };
+      case 'winking':
+        return {
+          leftEye: <ChibiEye />,
+          rightEye: <ChibiEye isWinking={true} />,
+          mouth: <path d="M-8,25 Q0,32 8,25" stroke="#f43f5e" strokeWidth="4" fill="none" strokeLinecap="round" opacity="0.8" />,
+          brows: null
+        };
       case 'thinking':
         return {
-          leftEye: <g transform="translate(0, -2)"><JewelEye isLeft={true} /></g>,
-          rightEye: <g transform="translate(0, -2)"><JewelEye isLeft={false} /></g>,
-          mouth: <path d="M-4,18 L4,18" stroke="#ec4899" strokeWidth="2" strokeLinecap="round" opacity="0.6" />,
+          leftEye: <g transform="translate(-2, -2)"><ChibiEye /></g>,
+          rightEye: <g transform="translate(-2, -2)"><ChibiEye /></g>,
+          mouth: <path d="M-6,28 L6,28" stroke="#f43f5e" strokeWidth="3" strokeLinecap="round" opacity="0.8" />,
           brows: (
-            <g stroke="#8b4513" strokeWidth="2" fill="none" opacity="0.4">
-               <path d="M-30,-15 Q-20,-18 -10,-15" />
-               <path d="M10,-22 Q20,-25 30,-22" />
+            <g transform="translate(0, -8)">
+              <path d="M-35,-25 Q-20,-28 -5,-25" stroke="#4338ca" strokeWidth="3" fill="none" strokeLinecap="round" opacity="0.4" />
+              <path d="M5,-30 Q20,-35 35,-28" stroke="#4338ca" strokeWidth="3" fill="none" strokeLinecap="round" opacity="0.6" />
+            </g>
+          )
+        };
+      case 'excited':
+        return {
+          leftEye: <ChibiEye />,
+          rightEye: <ChibiEye />,
+          mouth: <path d="M-10,22 Q0,35 10,22" fill="#f43f5e" opacity="0.9" />,
+          brows: null,
+          extra: (
+            <g className="animate-pulse">
+               <path d="M-50,-20 L-40,-30 M-50,-30 L-40,-20" stroke="#fbbf24" strokeWidth="4" strokeLinecap="round" />
+               <path d="M50,-20 L40,-30 M50,-30 L40,-20" stroke="#fbbf24" strokeWidth="4" strokeLinecap="round" />
             </g>
           )
         };
       case 'determined':
          return {
-          leftEye: <JewelEye isLeft={true} />,
-          rightEye: <JewelEye isLeft={false} />,
-          mouth: <path d="M-5,20 Q0,18 5,20" stroke="#ec4899" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.6" />,
+          leftEye: <ChibiEye />,
+          rightEye: <ChibiEye />,
+          mouth: <path d="M-8,28 Q0,25 8,28" stroke="#f43f5e" strokeWidth="4" fill="none" strokeLinecap="round" opacity="0.9" />,
           brows: (
-            <g stroke="#8b4513" strokeWidth="2" fill="none" opacity="0.5">
-               <path d="M-28,-15 Q-18,-10 -8,-15" />
-               <path d="M8,-15 Q18,-10 28,-15" />
+            <g transform="translate(0, 5)">
+               <path d="M-35,-30 Q-20,-22 -5,-30" stroke="#1e1b4b" strokeWidth="4" fill="none" strokeLinecap="round" opacity="0.7" />
+               <path d="M5,-30 Q20,-22 35,-30" stroke="#1e1b4b" strokeWidth="4" fill="none" strokeLinecap="round" opacity="0.7" />
             </g>
           )
         };
       default: // Neutral
         return {
-          leftEye: <JewelEye isLeft={true} />,
-          rightEye: <JewelEye isLeft={false} />,
-          mouth: <path d="M-5,18 Q0,20 5,18" stroke="#ec4899" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.6" />,
+          leftEye: <ChibiEye />,
+          rightEye: <ChibiEye />,
+          mouth: <path d="M-6,26 Q0,30 6,26" stroke="#f43f5e" strokeWidth="3" fill="none" strokeLinecap="round" opacity="0.7" />,
           brows: (
-            <g stroke="#8b4513" strokeWidth="2" fill="none" opacity="0.3">
-               <path d="M-28,-18 Q-18,-20 -8,-18" />
-               <path d="M8,-18 Q18,-20 28,-18" />
+            <g transform="translate(0, -5)">
+               <path d="M-30,-25 Q-20,-28 -10,-25" stroke="#4338ca" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.3" />
+               <path d="M10,-25 Q20,-28 30,-25" stroke="#4338ca" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.3" />
             </g>
           )
         };
@@ -181,111 +191,111 @@ const LunaMascot: React.FC<LunaMascotProps> = ({ mood, onClick }) => {
   const exp = getExpression();
 
   return (
-    <div className="relative group cursor-pointer w-64 h-64 md:w-80 md:h-80 transition-all duration-500 ease-in-out" onClick={handleInteraction}>
-      <svg viewBox="0 0 200 200" className="w-full h-full overflow-visible drop-shadow-2xl">
+    <div className="relative group cursor-pointer w-64 h-64 md:w-80 md:h-80 lg:w-[400px] lg:h-[400px] transition-all duration-500 ease-in-out" onClick={handleInteraction}>
+      <svg viewBox="0 0 240 240" className="w-full h-full overflow-visible drop-shadow-2xl">
         <defs>
-           <radialGradient id="skinGradient" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#fff1e6" />
-              <stop offset="100%" stopColor="#f3d0b9" />
+           <radialGradient id="chibiSkin" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#fff8f3" />
+              <stop offset="100%" stopColor="#ffeadb" />
            </radialGradient>
-           <linearGradient id="hairGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#5d4037" />
-              <stop offset="50%" stopColor="#795548" />
-              <stop offset="100%" stopColor="#8d6e63" />
+           <linearGradient id="chibiHair" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#4338ca" />
+              <stop offset="100%" stopColor="#312e81" />
            </linearGradient>
-           <linearGradient id="hairShine" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#ffffff" stopOpacity="0.4" />
-              <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
+           <linearGradient id="chibiHairHighlight" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="white" stopOpacity="0.5" />
+              <stop offset="100%" stopColor="white" stopOpacity="0" />
            </linearGradient>
-           <radialGradient id="eyeGradient" cx="50%" cy="50%" r="50%">
-              <stop offset="20%" stopColor="#a7f3d0" /> 
-              <stop offset="70%" stopColor="#059669" /> 
-              <stop offset="100%" stopColor="#064e3b" /> 
+           <radialGradient id="chibiIrisGradient" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#818cf8" />
+              <stop offset="60%" stopColor="#4338ca" />
+              <stop offset="100%" stopColor="#1e1b4b" />
            </radialGradient>
-           <linearGradient id="moonGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#fefce8" />
-              <stop offset="100%" stopColor="#fde047" />
+           <linearGradient id="chibiMoon" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#fef3c7" />
+              <stop offset="100%" stopColor="#fcd34d" />
            </linearGradient>
-           <clipPath id="eyeClip">
-              <path d="M-15,0 Q0,-12 15,0 Q15,10 0,12 Q-15,10 -15,0 Z" />
+           <clipPath id="chibiEyeClip">
+              <path d="M-22,-5 Q0,-22 22,-5 Q22,15 0,22 Q-22,15 -22,-5 Z" />
            </clipPath>
            <filter id="glow">
-             <feGaussianBlur stdDeviation="1.5" result="coloredBlur" />
+             <feGaussianBlur stdDeviation="2" result="coloredBlur" />
              <feMerge><feMergeNode in="coloredBlur" /><feMergeNode in="SourceGraphic" /></feMerge>
            </filter>
-           <filter id="softBlur">
-             <feGaussianBlur stdDeviation="3" />
-           </filter>
+           <style>
+             {`
+               @keyframes float {
+                 0%, 100% { transform: translateY(0px); }
+                 50% { transform: translateY(-10px); }
+               }
+               @keyframes blink {
+                 0%, 90%, 100% { transform: scaleY(1); }
+                 95% { transform: scaleY(0.1); }
+               }
+               .animate-float { animation: float 6s ease-in-out infinite; }
+             `}
+           </style>
         </defs>
 
-        {/* --- ANIMATION GROUP: BREATHING --- */}
-        {/* If sleeping, the animation is slower (duration 8s vs 6s) */}
-        <g className={isSleeping ? "animate-[float_8s_ease-in-out_infinite]" : "animate-[float_6s_ease-in-out_infinite]"}>
-
+        <g className="animate-float">
+          
           {/* 1. MOON BACKGROUND */}
-          <path d="M100,10 A90,90 0 1,1 100,190 A70,70 0 1,0 100,10 Z" fill="url(#moonGradient)" filter="url(#glow)" transform="rotate(-15 100 100)" opacity="0.9" />
+          <path d="M120,20 A100,100 0 1,1 120,220 A80,80 0 1,0 120,20 Z" fill="url(#chibiMoon)" filter="url(#glow)" transform="rotate(-15 120 120)" opacity="0.8" />
 
-          {/* 2. BACK HAIR (Updated to be Fuller/Wider) */}
+          {/* 2. CHIBI HAIR BACK */}
           <path 
-            d="M30,80 C10,130 0,200 60,230 C120,250 180,240 220,200 C240,150 220,100 170,80" 
-            fill="url(#hairGradient)" 
+            d="M50,100 C10,160 30,240 120,240 C210,240 230,160 190,100" 
+            fill="url(#chibiHair)" 
           />
 
-          {/* 3. BODY (Simple Dress) */}
-          <path d="M60,160 Q100,150 140,160 L150,220 L50,220 Z" fill="#312e81" />
-          <path d="M80,160 Q100,170 120,160" fill="white" opacity="0.2" />
+          {/* 3. TINY BODY */}
+          <path d="M90,180 Q120,170 150,180 L160,235 L80,235 Z" fill="#1e1b4b" />
+          <path d="M100,180 Q120,195 140,180" fill="white" opacity="0.3" />
 
-          {/* 4. NECK & FACE */}
-          <path d="M85,150 L85,160 L115,160 L115,150" fill="url(#skinGradient)" />
-          <ellipse cx="100" cy="110" rx="45" ry="50" fill="url(#skinGradient)" />
+          {/* 4. CHIBI HEAD */}
+          <path d="M110,170 L110,185 L130,185 L130,170" fill="url(#chibiSkin)" />
+          <ellipse cx="120" cy="120" rx="65" ry="60" fill="url(#chibiSkin)" />
           
-          <ellipse cx="70" cy="125" rx="10" ry="6" fill="#f472b6" opacity="0.3" filter="url(#softBlur)" />
-          <ellipse cx="130" cy="125" rx="10" ry="6" fill="#f472b6" opacity="0.3" filter="url(#softBlur)" />
+          <circle cx="85" cy="145" r="12" fill="#fda4af" opacity="0.4" filter="url(#glow)" />
+          <circle cx="155" cy="145" r="12" fill="#fda4af" opacity="0.4" filter="url(#glow)" />
 
-          {/* 5. FEATURES GROUP */}
-          <g transform="translate(100, 115)">
-            <g transform="translate(-22, -8)">{exp.leftEye}</g>
-            <g transform="translate(22, -8)">{exp.rightEye}</g>
-            <g transform="translate(0, 5)">{exp.mouth}</g>
-            <g transform="translate(0, -5)">{exp.brows}</g>
+          {/* 5. FACE FEATURES */}
+          <g transform="translate(120, 130)">
+            <g transform="translate(-32, -15) scale(0.9)">{exp.leftEye}</g>
+            <g transform="translate(32, -15) scale(0.9)">{exp.rightEye}</g>
+            <g transform="translate(0, 0)">{exp.mouth}</g>
+            <g transform="translate(0, -10)">{exp.brows}</g>
             {exp.extra}
-            <circle cx="0" cy="0" r="1" fill="#d7ccc8" />
           </g>
-          {exp.tear && <g transform="translate(100, 115)">{exp.tear}</g>}
+          {exp.tear && <g transform="translate(120, 130)">{exp.tear}</g>}
 
-          {/* 6. FRONT HAIR (BANGS) - Updated to be fuller and more framing */}
+          {/* 6. CHIBI BANGS */}
           <path 
-            d="M50,100 C50,40 100,30 150,100 C150,40 100,30 50,100 Z" 
-            fill="url(#hairGradient)" 
+            d="M55,120 C55,50 120,30 185,120 C185,50 120,30 55,120 Z" 
+            fill="url(#chibiHair)" 
           />
-          {/* Side Strands (Wider) */}
-          <path d="M52,90 Q40,150 60,190" stroke="url(#hairGradient)" strokeWidth="14" fill="none" strokeLinecap="round" />
-          <path d="M148,90 Q160,150 140,190" stroke="url(#hairGradient)" strokeWidth="14" fill="none" strokeLinecap="round" />
+          <path d="M80,75 Q120,55 160,75" stroke="url(#chibiHairHighlight)" strokeWidth="12" fill="none" strokeLinecap="round" opacity="0.5" />
           
-          {/* Top Shine */}
-          <path d="M70,60 Q100,50 130,60" stroke="url(#hairShine)" strokeWidth="6" fill="none" strokeLinecap="round" filter="url(#glow)" />
-
-          {/* 7. HAND & FEATHER (Only visible if awake) */}
+          {/* 7. TINY HAND & FEATHER (Only if awake) */}
           {!isSleeping && (
-            <g transform="translate(0, 30)">
-              <circle cx="135" cy="160" r="9" fill="url(#skinGradient)" stroke="#f3d0b9" strokeWidth="1"/>
+            <g transform="translate(20, 35)">
+              <circle cx="140" cy="170" r="10" fill="url(#chibiSkin)" />
               <path 
-                d="M135,160 Q155,120 175,90 Q165,100 160,120 Q150,140 135,160" 
+                d="M140,170 Q170,120 200,80 Q180,95 175,125 Q165,155 140,170" 
                 fill="white" 
                 filter="url(#glow)" 
-                className="origin-[135px_160px] animate-[bounce_3s_infinite]" 
+                className="origin-[140px_170px] animate-[bounce_3s_infinite]" 
               />
-              <path d="M135,160 L137,165" stroke="#333" strokeWidth="1.5" />
+              <path d="M140,170 L142,178" stroke="#333" strokeWidth="2.5" strokeLinecap="round" />
             </g>
           )}
 
-        </g> 
+        </g>
       </svg>
       
-      {/* Mood Tooltip (Changes text if sleeping) */}
-      <div className="absolute inset-0 flex items-end justify-center pb-4 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-        <span className="bg-indigo-900/80 text-white text-[10px] px-3 py-1 rounded-full uppercase tracking-widest backdrop-blur-md shadow-lg">
-          {isSleeping ? "Wake Up" : "Change Mood"}
+      <div className="absolute inset-0 flex items-end justify-center pb-8 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none">
+        <span className="bg-indigo-900/90 text-white text-[12px] px-5 py-2 rounded-full uppercase tracking-[0.2em] font-black backdrop-blur-md shadow-2xl border border-indigo-400/30">
+          {isSleeping ? "Wake Her Up" : "Inspiration Mode"}
         </span>
       </div>
     </div>
