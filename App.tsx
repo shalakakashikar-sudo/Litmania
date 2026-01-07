@@ -5,176 +5,7 @@ import Navigation from './components/Navigation';
 import DeviceCard from './components/DeviceCard';
 import InfographicModal from './components/InfographicModal';
 import Quiz from './components/Quiz';
-
-type LunaMood = 'neutral' | 'surprised' | 'sad' | 'winking';
-
-// --- THE NEW "VERY VERY KAWAII" LUNA MASCOT ---
-const LunaMascot: React.FC<{ mood: LunaMood; onClick: () => void }> = ({ mood, onClick }) => {
-  
-  // MEGA KAWAII EYES BASE
-  const eyeBase = (
-    <g>
-      {/* Giant Sclera */}
-      <circle cx="85" cy="115" r="20" fill="white" stroke="#312e81" strokeWidth="0.5" />
-      {/* Giant Iris Base */}
-      <circle cx="85" cy="115" r="17" fill="url(#eyeGradient)" />
-      {/* Giant Pupil */}
-      <circle cx="85" cy="118" r="8" fill="#1e1b4b" />
-      {/* KAWAII SPARKLES (Extra shiny!) */}
-      <ellipse cx="76" cy="105" rx="6" ry="4" fill="white" filter="url(#glow)" transform="rotate(-20 76 105)" /> {/* Main giant sparkle */}
-      <circle cx="94" cy="122" r="3.5" fill="white" opacity="0.9" /> {/* Secondary sparkle */}
-      <circle cx="82" cy="128" r="2" fill="white" opacity="0.8" /> {/* Tiny bottom sparkle */}
-    </g>
-  );
-
-  const expressions = {
-    eyes: {
-      neutral: (
-        <g>
-          <g transform="translate(-10,0)">{eyeBase}</g>
-          <g transform="translate(70,0)">{eyeBase}</g>
-        </g>
-      ),
-      surprised: (
-        <g>
-           <g transform="translate(-10,-4)">{eyeBase}</g>
-           <g transform="translate(70,-4)">{eyeBase}</g>
-           {/* Tiny high brows */}
-           <path d="M70 90 Q80 85 90 90" stroke="#4338ca" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.6"/>
-           <path d="M150 90 Q160 85 170 90" stroke="#4338ca" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.6"/>
-        </g>
-      ),
-      sad: (
-        <g>
-          <g transform="translate(-10,4)">{eyeBase}</g>
-          <g transform="translate(70,4)">{eyeBase}</g>
-          {/* Sad eyelid overlay */}
-          <path d="M60 105 Q85 125 110 105" fill="#ffe4e6" />
-          <path d="M140 105 Q165 125 190 105" fill="#ffe4e6" />
-          {/* Big cartoon tears */}
-          <circle cx="75" cy="140" r="4" fill="#bae6fd" opacity="0.9" className="animate-bounce"/>
-          <circle cx="165" cy="140" r="3" fill="#bae6fd" opacity="0.9" className="animate-bounce" style={{animationDelay:'0.2s'}}/>
-        </g>
-      ),
-      winking: (
-        <g>
-           <g transform="translate(-10,0)">{eyeBase}</g>
-           {/* Kawaii Wink >_< style */}
-           <path d="M150 120 L165 130 L180 120" stroke="#312e81" strokeWidth="4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-        </g>
-      )
-    },
-    mouth: {
-      // Tiny mouths placed higher up between the giant eyes
-      neutral: <path d="M115 145 Q120 148 125 145" stroke="#be123c" strokeWidth="2.5" strokeLinecap="round" fill="none" opacity="0.7" />,
-      surprised: <circle cx="120" cy="148" r="3" stroke="#be123c" strokeWidth="2.5" fill="none" opacity="0.7" />,
-      sad: <path d="M115 150 Q120 145 125 150" stroke="#be123c" strokeWidth="2.5" strokeLinecap="round" fill="none" opacity="0.7" />,
-      winking: <path d="M115 145 Q120 142 125 148" stroke="#be123c" strokeWidth="2.5" strokeLinecap="round" fill="none" opacity="0.7" />
-    }
-  };
-
-  return (
-    <div className="relative group cursor-pointer w-48 h-48 md:w-72 md:h-72 lg:w-[420px] lg:h-[420px] transition-all duration-500" onClick={onClick}>
-      <svg viewBox="0 0 240 240" className="w-full h-full drop-shadow-2xl transition-transform duration-500 group-hover:scale-105 overflow-visible">
-        <defs>
-          <linearGradient id="moonGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#fef3c7" />
-            <stop offset="100%" stopColor="#fcd34d" />
-          </linearGradient>
-          <linearGradient id="hairGradientDeep" x1="0%" y1="0%" x2="0%" y2="100%">
-             <stop offset="0%" stopColor="#1e1b4b" /> 
-             <stop offset="100%" stopColor="#312e81" />
-          </linearGradient>
-           <linearGradient id="hairGradientMain" x1="0%" y1="0%" x2="100%" y2="100%">
-             <stop offset="0%" stopColor="#312e81" />
-             <stop offset="50%" stopColor="#4338ca" />
-             <stop offset="100%" stopColor="#6366f1" /> 
-          </linearGradient>
-          <radialGradient id="eyeGradient" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#818cf8" /> {/* Lighter purple for cuteness */}
-            <stop offset="100%" stopColor="#312e81" />
-          </radialGradient>
-          <linearGradient id="featherGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-             <stop offset="0%" stopColor="#ffffff" />
-             <stop offset="100%" stopColor="#e2e8f0" />
-          </linearGradient>
-           <filter id="glow">
-            <feGaussianBlur stdDeviation="2.5" result="coloredBlur" />
-            <feMerge>
-              <feMergeNode in="coloredBlur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-           <filter id="softHairBlur">
-            <feGaussianBlur stdDeviation="4" />
-          </filter>
-        </defs>
-
-        {/* --- BACKGROUND MOON (Rounder and cuter) --- */}
-        <path d="M120,20 A90,90 0 1,1 120,200 A70,70 0 1,0 120,20 Z" fill="url(#moonGradient)" filter="url(#glow)" transform="rotate(-15 120 120) scale(0.9)" className="animate-[pulse_4s_ease-in-out_infinite]" />
-
-        {/* --- POOFY KAWAII HAIR --- */}
-        {/* Deep Back Layer (Poofier) */}
-        <path 
-          d="M30,80 C-10,150 10,220 60,240 C120,260 180,260 220,240 C260,200 250,130 210,80" 
-          fill="url(#hairGradientDeep)" 
-          filter="url(#softHairBlur)"
-          opacity="0.7"
-        />
-        {/* Main Body (Rounder, bouncier waves) */}
-        <path 
-          d="M50,60 C0,130 20,200 70,220 C120,240 160,240 200,220 C240,180 230,110 190,60" 
-          fill="url(#hairGradientMain)" 
-        />
-
-        {/* --- DRESS (Tiny body) --- */}
-        <path d="M80,180 Q120,170 160,180 L170,240 L70,240 Z" fill="#312e81" />
-
-        {/* --- KAWAII HEAD & FACE (Rounder, bigger forehead, lower features) --- */}
-        {/* Tiny Neck */}
-        <path d="M110,170 L110,185 L130,185 L130,170" fill="#ffe4e6" />
-        {/* Super Round Face Shape */}
-        <ellipse cx="120" cy="125" rx="70" ry="65" fill="#ffe4e6" />
-        
-        {/* GIANT BLUSH CHEEKS */}
-        <ellipse cx="75" cy="145" rx="12" ry="8" fill="#fda4af" opacity="0.6" filter="url(#glow)" />
-        <ellipse cx="165" cy="145" rx="12" ry="8" fill="#fda4af" opacity="0.6" filter="url(#glow)" />
-
-        {expressions.eyes[mood]}
-        {expressions.mouth[mood]}
-
-        {/* --- FRONT HAIR (Bangs hugging the round face) --- */}
-        <path 
-          d="M60,125 C55,50 120,40 180,125 C190,60 120,30 60,60 Z" 
-          fill="url(#hairGradientMain)"
-          opacity="0.95"
-        />
-         {/* Chunky side strands */}
-        <path d="M65,120 C55,150 65,180 80,200" stroke="url(#hairGradientMain)" strokeWidth="10" fill="none" strokeLinecap="round" />
-        <path d="M175,120 C185,150 175,180 160,200" stroke="url(#hairGradientMain)" strokeWidth="10" fill="none" strokeLinecap="round" />
-
-        {/* --- CHUBBY HAND & FEATHER --- */}
-        <g transform="translate(0, 35)">
-           <circle cx="150" cy="170" r="12" fill="#ffe4e6" stroke="#fb7185" strokeWidth="0.5"/>
-           {/* Rounder feather */}
-           <path d="M150,170 Q170,130 190,100 Q180,110 175,130 Q165,150 150,170" fill="url(#featherGradient)" filter="url(#glow)" className="origin-[150px_170px] animate-[bounce_3s_infinite]" />
-        </g>
-        
-        {/* Extra sparkles */}
-        <circle cx="190" cy="60" r="3" fill="white" className="animate-pulse" filter="url(#glow)" />
-        <circle cx="50" cy="180" r="2" fill="white" className="animate-pulse" style={{animationDelay:'0.5s'}} filter="url(#glow)" />
-      </svg>
-
-      <div className="absolute inset-0 flex items-end justify-center pb-8 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-        <span className="bg-indigo-900/80 text-indigo-100 text-[10px] px-4 py-1.5 rounded-full uppercase tracking-widest backdrop-blur-md shadow-lg border border-indigo-300/30">
-          Change Mood
-        </span>
-      </div>
-    </div>
-  );
-};
-
-// --- MAIN APP COMPONENT ---
+import LunaMascot, { LunaMood } from './components/LunaMascot';
 
 const App: React.FC = () => {
   const [selectedDevice, setSelectedDevice] = useState<LiteraryDevice | null>(null);
@@ -199,9 +30,11 @@ const App: React.FC = () => {
     });
   }, [activeCategory, searchQuery]);
 
-  const allQuestions = useMemo(() => 
-    LITERARY_DEVICES.filter(d => d.quiz && d.quiz.length > 0).flatMap(d => d.quiz), 
-  []);
+  // Shuffled version of all questions, re-computed whenever showFinalQuiz becomes true
+  const allQuestions = useMemo(() => {
+    const questions = LITERARY_DEVICES.filter(d => d.quiz && d.quiz.length > 0).flatMap(d => d.quiz);
+    return [...questions].sort(() => Math.random() - 0.5);
+  }, [showFinalQuiz]);
 
   const navigateDevice = (direction: 'next' | 'prev') => {
     if (!selectedDevice) return;
@@ -253,15 +86,18 @@ const App: React.FC = () => {
   useEffect(() => { if (showFinalQuiz) window.scrollTo({ top: 0, behavior: 'smooth' }); }, [showFinalQuiz]);
 
   const cycleMood = () => {
-    const moods: LunaMood[] = ['neutral', 'surprised', 'sad', 'winking'];
+    const moods: LunaMood[] = ['neutral', 'surprised', 'sad', 'winking', 'thinking', 'excited', 'determined'];
     setLunaMood(moods[(moods.indexOf(lunaMood) + 1) % moods.length]);
   };
 
   const moodConfig = {
-    neutral: { quote: "Every device is a master key.", subtitle: "The Librarian of Dreams" },
-    surprised: { quote: "A hidden meaning revealed!", subtitle: "The Astonished Sage" },
-    sad: { quote: "Tragedy carved in words.", subtitle: "The Melancholic Poet" },
-    winking: { quote: "A secret shared between us.", subtitle: "The Playful Archivist" }
+    neutral: { quote: "Every device is a master key to the mind.", subtitle: "The Librarian of Dreams" },
+    surprised: { quote: "By the stars! A hidden meaning revealed!", subtitle: "The Astonished Sage" },
+    sad: { quote: "Even tragedy is beautiful when carved in ink.", subtitle: "The Melancholic Poet" },
+    winking: { quote: "A metaphor is just a secret shared between us.", subtitle: "The Playful Archivist" },
+    thinking: { quote: "Is this irony... or merely a paradox?", subtitle: "The Pondering Scholar" },
+    excited: { quote: "This imagery is absolutely electric!", subtitle: "The Inspired Muse" },
+    determined: { quote: "We shall decipher every symbol on this page.", subtitle: "The Dedicated Guide" }
   };
 
   return (
@@ -275,7 +111,6 @@ const App: React.FC = () => {
           
           <div className="flex flex-col lg:flex-row items-center lg:items-center justify-center gap-8 lg:gap-20">
             
-            {/* LEFT SIDE: LUNA MASCOT */}
             <div className="relative animate-in fade-in slide-in-from-bottom-8 duration-1000 flex-shrink-0 flex flex-col items-center">
                <div className="absolute inset-[-40px] bg-gradient-to-tr from-indigo-100 via-rose-100 to-amber-100 rounded-full blur-[60px] opacity-60 animate-pulse"></div>
                <LunaMascot mood={lunaMood} onClick={cycleMood} />
@@ -289,9 +124,8 @@ const App: React.FC = () => {
                 </div>
             </div>
 
-            {/* RIGHT SIDE: CONTROLS & QUOTE */}
             <div className="flex flex-col items-center lg:items-start text-center lg:text-left w-full max-w-2xl z-10">
-               <h1 className="text-4xl lg:text-6xl font-serif-elegant font-black italic text-slate-900 leading-tight mb-4 drop-shadow-sm">
+               <h1 className="text-4xl lg:text-6xl font-serif-elegant font-black italic text-slate-900 leading-tight mb-4 drop-shadow-sm min-h-[120px]">
                   "{moodConfig[lunaMood].quote}"
                </h1>
                
@@ -358,7 +192,7 @@ const App: React.FC = () => {
                <span>←</span> Return to Library
             </button>
             <div className="glass rounded-[3rem] overflow-hidden shadow-2xl border-4 border-slate-50">
-              <Quiz title="The Grand Archivist's Mastery Quiz" questions={allQuestions} onComplete={() => goHome()} />
+              <Quiz title="The Randomized Grand Finale" questions={allQuestions} onComplete={() => goHome()} />
             </div>
           </div>
         </main>
