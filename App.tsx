@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { LITERARY_DEVICES } from './constants';
 import { LiteraryDevice, Category } from './types';
@@ -14,7 +15,7 @@ const App: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isScrolled, setIsScrolled] = useState(false);
   const [lunaMood, setLunaMood] = useState<LunaMood>('neutral');
-
+  
   const searchInputRef = useRef<HTMLInputElement>(null);
   const libraryRef = useRef<HTMLElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
@@ -30,7 +31,6 @@ const App: React.FC = () => {
     });
   }, [activeCategory, searchQuery]);
 
-  // Shuffled version of all questions, re-computed whenever showFinalQuiz becomes true
   const allQuestions = useMemo(() => {
     const questions = LITERARY_DEVICES.filter(d => d.quiz && d.quiz.length > 0).flatMap(d => d.quiz);
     return [...questions].sort(() => Math.random() - 0.5);
@@ -59,7 +59,7 @@ const App: React.FC = () => {
       if (e.key === '/' && document.activeElement !== searchInputRef.current) {
         e.preventDefault();
         searchInputRef.current?.focus();
-        window.scrollTo({ top: searchInputRef.current?.parentElement?.getBoundingClientRect().top! + window.scrollY - 150, behavior: 'smooth' });
+        window.scrollTo({ top: (searchInputRef.current?.parentElement?.getBoundingClientRect().top || 0) + window.scrollY - 150, behavior: 'smooth' });
       }
     };
     window.addEventListener('scroll', handleScroll);
@@ -77,13 +77,6 @@ const App: React.FC = () => {
     setActiveCategory('All');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
-
-  const scrollToLibrary = () => {
-    if (libraryRef.current) window.scrollTo({ top: libraryRef.current.offsetTop - 120, behavior: 'smooth' });
-  };
-
-  useEffect(() => { if (searchQuery && window.scrollY < 400) scrollToLibrary(); }, [searchQuery]);
-  useEffect(() => { if (showFinalQuiz) window.scrollTo({ top: 0, behavior: 'smooth' }); }, [showFinalQuiz]);
 
   const cycleMood = () => {
     const moods: LunaMood[] = ['neutral', 'surprised', 'sad', 'winking', 'thinking', 'excited', 'determined'];
@@ -105,37 +98,27 @@ const App: React.FC = () => {
       <Navigation onHome={goHome} onFinalQuiz={() => setShowFinalQuiz(true)} />
       
       {!showFinalQuiz && (
-        <header className="relative pt-28 pb-12 px-6 lg:px-8 max-w-7xl mx-auto overflow-hidden">
+        <header className="relative pt-32 lg:pt-40 pb-16 px-6 lg:px-8 max-w-7xl mx-auto overflow-hidden">
           <div className="absolute top-0 right-0 -z-10 w-[800px] h-[800px] bg-indigo-50 rounded-full blur-[140px] opacity-70"></div>
           <div className="absolute -bottom-40 -left-40 -z-10 w-[700px] h-[700px] bg-rose-50 rounded-full blur-[120px] opacity-60"></div>
           
-          <div className="flex flex-col lg:flex-row items-center lg:items-center justify-center gap-8 lg:gap-20">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16">
             
-            <div className="relative animate-in fade-in slide-in-from-bottom-8 duration-1000 flex-shrink-0 flex flex-col items-center">
-               <div className="absolute inset-[-40px] bg-gradient-to-tr from-indigo-100 via-rose-100 to-amber-100 rounded-full blur-[60px] opacity-60 animate-pulse"></div>
-               <LunaMascot mood={lunaMood} onClick={cycleMood} />
-                <div className="relative -mt-6 flex flex-col items-center gap-2 z-10">
-                  <div className="bg-black text-white px-8 py-2 rounded-full font-black tracking-[0.4em] text-[10px] md:text-xs shadow-xl uppercase transform hover:scale-110 transition-transform cursor-pointer" onClick={cycleMood}>
-                    LUNA
-                  </div>
-                  <div className="text-[9px] font-black tracking-[0.2em] text-slate-500 uppercase bg-white/90 backdrop-blur-md px-4 py-1.5 rounded-lg border border-slate-100 shadow-sm">
+            <div className="w-full lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left z-10 order-2 lg:order-1">
+               <div className="mb-4">
+                  <span className="text-[10px] font-black text-indigo-600 uppercase tracking-[0.3em] px-4 py-1.5 bg-indigo-50 rounded-full border border-indigo-100">
                     {moodConfig[lunaMood].subtitle}
-                  </div>
-                </div>
-            </div>
-
-            <div className="flex flex-col items-center lg:items-start text-center lg:text-left w-full max-w-2xl z-10">
-               <h1 className="text-4xl lg:text-6xl font-serif-elegant font-black italic text-slate-900 leading-tight mb-4 drop-shadow-sm min-h-[120px]">
+                  </span>
+               </div>
+               <h1 className="text-4xl lg:text-6xl font-serif-elegant font-black italic text-slate-900 leading-[1.1] mb-8 drop-shadow-sm min-h-[140px]">
                   "{moodConfig[lunaMood].quote}"
                </h1>
-               
-               <p className="text-slate-500 mb-8 font-medium">Click Luna to change her mood & inspiration.</p>
               
-               <div className="w-full relative group mb-8">
+               <div className="w-full relative group mb-10">
                   <input 
                     ref={searchInputRef}
                     type="text"
-                    placeholder="Search literary devices..."
+                    placeholder="Search literary devices... (press /)"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="w-full px-8 py-5 rounded-2xl bg-white border-2 border-slate-200 shadow-xl focus:ring-4 focus:ring-indigo-100 transition-all outline-none text-xl font-bold group-hover:border-indigo-300"
@@ -153,16 +136,24 @@ const App: React.FC = () => {
                   {categories.map((cat) => (
                     <button
                       key={cat}
-                      onClick={() => { setActiveCategory(cat as Category | 'All'); setTimeout(scrollToLibrary, 50); }}
-                      className={`px-6 py-2 rounded-full text-xs font-bold tracking-wider transition-all duration-300 border-2 ${
+                      onClick={() => { setActiveCategory(cat as Category | 'All'); }}
+                      className={`px-6 py-2 rounded-full text-[10px] font-black tracking-wider transition-all duration-300 border-2 ${
                         activeCategory === cat ? 'bg-black text-white border-black shadow-lg transform scale-105' : 'bg-white text-slate-600 border-slate-200 hover:border-indigo-300'
                       }`}
                     >
-                      {cat}
+                      {cat.toUpperCase()}
                     </button>
                   ))}
                </div>
             </div>
+
+            <div className="w-full lg:w-1/2 flex justify-center lg:justify-end order-1 lg:order-2 animate-in fade-in zoom-in-95 duration-1000">
+               <LunaMascot 
+                mood={lunaMood} 
+                onClick={cycleMood} 
+               />
+            </div>
+
           </div>
         </header>
       )}
@@ -179,7 +170,7 @@ const App: React.FC = () => {
             ) : (
               <div className="col-span-full py-32 text-center opacity-60">
                 <div className="text-8xl mb-4">🌙</div>
-                <h3 className="text-2xl font-bold">Luna cannot find that tome.</h3>
+                <h3 className="text-2xl font-bold">No tomes found.</h3>
                 <button onClick={() => {setSearchQuery(''); setActiveCategory('All');}} className="mt-4 text-indigo-600 font-bold underline">Clear Filters</button>
               </div>
             )}

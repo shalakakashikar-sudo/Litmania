@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { QuizQuestion } from '../types';
 
 interface QuizProps {
@@ -15,6 +15,19 @@ const Quiz: React.FC<QuizProps> = ({ questions, onComplete, title }) => {
   const [score, setScore] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
   const quizRef = useRef<HTMLDivElement>(null);
+
+  // Generate a randomized set of indices for the current question's options
+  const shuffledIndices = useMemo(() => {
+    if (!questions || !questions[currentStep]) return [];
+    // Create an array of indices [0, 1, 2, 3...]
+    const indices = questions[currentStep].options.map((_, i) => i);
+    // Fisher-Yates shuffle algorithm
+    for (let i = indices.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [indices[i], indices[j]] = [indices[j], indices[i]];
+    }
+    return indices;
+  }, [currentStep, questions]);
 
   // Scroll to the top of the quiz component whenever the step changes
   useEffect(() => {
@@ -46,11 +59,14 @@ const Quiz: React.FC<QuizProps> = ({ questions, onComplete, title }) => {
     );
   }
 
-  const handleSelect = (idx: number) => {
+  const handleSelect = (shuffledIdx: number) => {
     if (showExplanation) return;
-    setSelectedOption(idx);
+    setSelectedOption(shuffledIdx);
     setShowExplanation(true);
-    if (idx === questions[currentStep].correctAnswer) {
+    
+    // Check if the original index represented by this shuffled position is the correct one
+    const originalIdx = shuffledIndices[shuffledIdx];
+    if (originalIdx === questions[currentStep].correctAnswer) {
       setScore(prev => prev + 1);
     }
   };
@@ -98,19 +114,25 @@ const Quiz: React.FC<QuizProps> = ({ questions, onComplete, title }) => {
       </div>
 
       <div className="space-y-3 md:space-y-4">
-        {currentQ.options.map((opt, idx) => {
+        {shuffledIndices.map((originalIdx, shuffledIdx) => {
+          const opt = currentQ.options[originalIdx];
           let colorClass = "bg-white border-slate-200 hover:border-black text-black";
+          
           if (showExplanation) {
-            if (idx === currentQ.correctAnswer) colorClass = "bg-emerald-600 border-emerald-600 text-white scale-[1.01] shadow-lg";
-            else if (idx === selectedOption) colorClass = "bg-rose-600 border-rose-600 text-white";
-            else colorClass = "bg-slate-50 border-slate-100 text-slate-400 opacity-60";
+            if (originalIdx === currentQ.correctAnswer) {
+              colorClass = "bg-emerald-600 border-emerald-600 text-white scale-[1.01] shadow-lg";
+            } else if (shuffledIdx === selectedOption) {
+              colorClass = "bg-rose-600 border-rose-600 text-white";
+            } else {
+              colorClass = "bg-slate-50 border-slate-100 text-slate-400 opacity-60";
+            }
           }
 
           return (
             <button
-              key={idx}
+              key={`${currentStep}-${originalIdx}`}
               disabled={showExplanation}
-              onClick={() => handleSelect(idx)}
+              onClick={() => handleSelect(shuffledIdx)}
               className={`w-full p-4 md:p-5 text-left rounded-2xl border-2 transition-all duration-300 ${colorClass} shadow-sm font-bold text-sm md:text-base`}
             >
               {opt}
