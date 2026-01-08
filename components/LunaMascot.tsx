@@ -9,20 +9,22 @@ interface LunaMascotProps {
 }
 
 /**
- * Replace these URLs with your own direct links.
- * You can now use .mp4, .webm, or .ogg links for looping videos.
- * For best results, use landscape aspect ratio (16:9).
+ * INSTRUCTIONS FOR LOCAL ASSETS:
+ * 1. Create a 'public/assets/' folder in your project root.
+ * 2. Place your images or videos there.
+ * 3. Update the filenames below to match your files exactly.
+ * 
+ * Example: if you have 'happy.mp4' in 'public/assets/', use '/assets/happy.mp4'.
  */
 const MOOD_MEDIA: Record<string, string> = {
-  // Example looping video placeholders (replace with your specific links)
-  sleeping: 'https://assets.mixkit.co/videos/preview/mixkit-starry-night-sky-over-a-calm-lake-4375-large.mp4',
-  neutral: 'https://assets.mixkit.co/videos/preview/mixkit-starry-night-sky-over-a-calm-lake-4375-large.mp4',
-  surprised: 'https://images.unsplash.com/photo-1513245552030-c7b857393a6a?auto=format&fit=crop&q=80&w=1200',
-  sad: 'https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&q=80&w=1200',
-  winking: 'https://images.unsplash.com/photo-1518791841217-8f162f1e1131?auto=format&fit=crop&q=80&w=1200',
-  thinking: 'https://images.unsplash.com/photo-1519052537078-e6302a4968d4?auto=format&fit=crop&q=80&w=1200',
-  excited: 'https://images.unsplash.com/photo-1573865526739-10659fec78a5?auto=format&fit=crop&q=80&w=1200',
-  determined: 'https://images.unsplash.com/photo-1533743983669-94fa5c4338ef?auto=format&fit=crop&q=80&w=1200',
+  sleeping: '/assets/sleeping.mp4',
+  neutral: '/assets/neutral.mp4',
+  surprised: '/assets/surprised.jpg',
+  sad: '/assets/sad.jpg',
+  winking: '/assets/winking.mp4',
+  thinking: '/assets/thinking.jpg',
+  excited: '/assets/excited.mp4',
+  determined: '/assets/determined.jpg',
 };
 
 const LunaMascot: React.FC<LunaMascotProps> = ({ mood, onClick }) => {
@@ -36,6 +38,7 @@ const LunaMascot: React.FC<LunaMascotProps> = ({ mood, onClick }) => {
     const startTimer = () => {
       setIsSleeping(false);
       if (idleTimer) window.clearTimeout(idleTimer);
+      // Mascot "sleeps" after 15 seconds of no activity
       idleTimer = window.setTimeout(() => setIsSleeping(true), 15000);
     };
     startTimer();
@@ -78,6 +81,12 @@ const LunaMascot: React.FC<LunaMascotProps> = ({ mood, onClick }) => {
           loop
           muted
           playsInline
+          onError={(e) => {
+            console.error("Local media error:", url);
+            // Optional fallback if local file is missing
+            const target = e.target as HTMLVideoElement;
+            target.style.display = 'none';
+          }}
         />
       );
     }
@@ -88,6 +97,11 @@ const LunaMascot: React.FC<LunaMascotProps> = ({ mood, onClick }) => {
         alt="Mascot Media"
         className={className}
         style={style}
+        onError={(e) => {
+          console.error("Local image error:", url);
+          // Fallback to a placeholder if local file is missing
+          (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1495360010541-f48722b34f7d?auto=format&fit=crop&q=80&w=1200';
+        }}
       />
     );
   };
@@ -95,7 +109,7 @@ const LunaMascot: React.FC<LunaMascotProps> = ({ mood, onClick }) => {
   return (
     <div className="relative group w-full max-w-xl xl:max-w-2xl">
       <div 
-        className="relative aspect-video w-full cursor-pointer transition-all duration-700 ease-in-out hover:brightness-110"
+        className="relative aspect-video w-full cursor-pointer transition-all duration-700 ease-in-out hover:brightness-105"
         onClick={() => isSleeping ? setIsSleeping(false) : onClick()}
       >
         <div className="absolute inset-8 rounded-[2.5rem] bg-indigo-500/10 blur-[80px] animate-pulse"></div>
