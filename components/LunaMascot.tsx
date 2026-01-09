@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 export type LunaMood = 'neutral' | 'surprised' | 'sad' | 'winking' | 'thinking' | 'excited' | 'determined';
 
@@ -9,134 +9,149 @@ interface LunaMascotProps {
 }
 
 /**
- * REPOSITORY ASSET INSTRUCTIONS:
- * 1. Create a folder named 'public' in your project root.
- * 2. Inside 'public', create a folder named 'assets'.
- * 3. Place your images (.jpg, .png, .webp) and videos (.mp4, .webm) there.
- * 4. Update the paths below. 
- *    NOTE: Vite automatically serves files in 'public' from the root path '/'.
+ * 🎓 DIRECT LINKING GUIDE FOR VIDEOS:
+ * 
+ * Your video tag requires a URL that points to the RAW FILE, not a web player.
+ * 
+ * 1. GITHUB FIX: 
+ *    Incorrect: https://github.com/USER/REPO/blob/main/video.mp4
+ *    Correct:   https://raw.githubusercontent.com/USER/REPO/main/video.mp4
+ * 
+ * 2. DROPBOX FIX: 
+ *    Change "?dl=0" at the end to "?raw=1"
  */
-const MOOD_MEDIA: Record<string, string> = {
-  sleeping: 'public/assets/sleeping.mp4',
-  neutral: '/assets/neutral.mp4',
-  surprised: '/assets/surprised.jpg',
-  sad: '/assets/sad.jpg',
-  winking: '/assets/winking.mp4',
-  thinking: '/assets/thinking.jpg',
-  excited: '/assets/excited.mp4',
-  determined: '/assets/determined.jpg',
+const MOOD_VIDEOS: Record<string, string> = {
+  // Corrected Raw GitHub Links:
+  sleeping: 'https://raw.githubusercontent.com/shalakakashikar-sudo/Lumi/2916fb94ea2b0fd63b280eade78ed2eb9a7b6aae/luna_sleeping.mp4.mp4', 
+  neutral: 'https://raw.githubusercontent.com/shalakakashikar-sudo/Lumi/adaa8901665693e0b1af657fabbccba89a5f6daa/Video_Generation_for_Neutral_Expression.mp4',
+  surprised: 'https://raw.githubusercontent.com/shalakakashikar-sudo/Lumi/386507bb5235c293dc32bba01827a086c3cecbb4/Video_Generation_Surprised_Expression.mp4', 
+  sad: '',
+  winking: '',
+  thinking: '',
+  excited: 'https://raw.githubusercontent.com/shalakakashikar-sudo/Lumi/4dc97b1f6641ced6a2fa683e51eddf4652146e5c/Video_Ready_For_Excitement.mp4',
+  determined: '',
 };
+
+// Fallback image if video link is empty or broken
+const FALLBACK_IMAGE = "https://images.unsplash.com/photo-1495360010541-f48722b34f7d?auto=format&fit=crop&q=80&w=1200";
 
 const LunaMascot: React.FC<LunaMascotProps> = ({ mood, onClick }) => {
   const [isSleeping, setIsSleeping] = useState(false);
-  const [activeMedia, setActiveMedia] = useState(MOOD_MEDIA.neutral);
-  const [prevMedia, setPrevMedia] = useState<string | null>(null);
-  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [videoError, setVideoError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Handle idle state for "Sleeping" mode
+  // Handle Idle State (Sleeping)
   useEffect(() => {
     let idleTimer: number | undefined;
     const startTimer = () => {
       setIsSleeping(false);
       if (idleTimer) window.clearTimeout(idleTimer);
-      // Mascot "sleeps" after 15 seconds of no activity
-      idleTimer = window.setTimeout(() => setIsSleeping(true), 15000);
+      idleTimer = window.setTimeout(() => setIsSleeping(true), 25000);
     };
     
     startTimer();
     const handleInput = () => startTimer();
-    window.addEventListener('click', handleInput);
+    window.addEventListener('mousedown', handleInput);
     window.addEventListener('mousemove', handleInput);
-    window.addEventListener('keydown', handleInput);
     
     return () => {
       if (idleTimer) window.clearTimeout(idleTimer);
-      window.removeEventListener('click', handleInput);
+      window.removeEventListener('mousedown', handleInput);
       window.removeEventListener('mousemove', handleInput);
-      window.removeEventListener('keydown', handleInput);
     };
-  }, [mood]);
+  }, []);
 
-  // Handle cross-fade transitions between moods
+  // Reset states when the video source changes
   useEffect(() => {
-    const nextMedia = isSleeping ? MOOD_MEDIA.sleeping : MOOD_MEDIA[mood];
-    if (nextMedia !== activeMedia) {
-      setPrevMedia(activeMedia);
-      setActiveMedia(nextMedia);
-      setIsTransitioning(true);
-      const timer = setTimeout(() => setIsTransitioning(false), 600);
-      return () => clearTimeout(timer);
-    }
-  }, [isSleeping, mood, activeMedia]);
+    setVideoError(false);
+    setIsLoading(true);
+  }, [mood, isSleeping]);
 
-  const isVideo = (url: string) => {
-    const videoExtensions = ['.mp4', '.webm', '.ogg', 'video'];
-    return videoExtensions.some(ext => url.toLowerCase().includes(ext));
-  };
-
-  const renderMedia = (url: string, className: string, style: React.CSSProperties) => {
-    if (isVideo(url)) {
-      return (
-        <video
-          key={url}
-          src={url}
-          className={className}
-          style={style}
-          autoPlay
-          loop
-          muted
-          playsInline
-          onError={(e) => {
-            // If local video fails (e.g. file missing), log warning and hide element
-            console.warn("Local video not found at path:", url);
-            (e.target as HTMLVideoElement).style.display = 'none';
-          }}
-        />
-      );
-    }
-    return (
-      <img
-        key={url}
-        src={url}
-        alt="Mascot State"
-        className={className}
-        style={style}
-        onError={(e) => {
-          // Fallback if local image is missing
-          (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1495360010541-f48722b34f7d?auto=format&fit=crop&q=80&w=1200';
-        }}
-      />
-    );
-  };
+  const activeVideo = isSleeping ? MOOD_VIDEOS.sleeping : (MOOD_VIDEOS[mood] || MOOD_VIDEOS.neutral);
 
   return (
     <div className="relative group w-full max-w-xl xl:max-w-2xl">
       <div 
         className="relative aspect-video w-full cursor-pointer transition-all duration-700 ease-in-out hover:brightness-105"
-        onClick={() => isSleeping ? setIsSleeping(false) : onClick()}
+        onClick={onClick}
       >
-        {/* Glow effect behind the frame */}
-        <div className="absolute inset-8 rounded-[2.5rem] bg-indigo-500/10 blur-[80px] animate-pulse"></div>
+        {/* Aesthetic Glow effect */}
+        <div className="absolute inset-10 rounded-[2.5rem] bg-indigo-500/20 blur-[80px] group-hover:bg-indigo-500/30 transition-all duration-700"></div>
         
-        {/* The Frame */}
+        {/* Video Frame */}
         <div className="relative w-full h-full rounded-[2.5rem] lg:rounded-[3rem] overflow-hidden shadow-2xl border-2 border-white/40 bg-slate-900">
-          {/* Previous media for fading out */}
-          {prevMedia && renderMedia(prevMedia, "absolute inset-0 w-full h-full object-cover z-10", {})}
           
-          {/* Current active media fading in */}
-          {renderMedia(activeMedia, "absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out z-20", {
-            opacity: isTransitioning ? 0 : 1
-          })}
+          {/* Loading Spinner */}
+          {isLoading && activeVideo && !videoError && (
+            <div className="absolute inset-0 z-20 flex items-center justify-center bg-slate-900">
+              <div className="w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+            </div>
+          )}
+
+          {activeVideo && !videoError ? (
+            <video
+              ref={videoRef}
+              key={activeVideo} 
+              src={activeVideo}
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+              autoPlay
+              loop
+              muted
+              playsInline
+              onLoadedData={() => setIsLoading(false)}
+              onError={(e) => {
+                console.error("Video source failed. Ensure you are using a DIRECT link:", activeVideo);
+                setVideoError(true);
+                setIsLoading(false);
+              }}
+            />
+          ) : (
+            <img 
+              src={FALLBACK_IMAGE} 
+              alt="Fallback" 
+              className="absolute inset-0 w-full h-full object-cover opacity-60 grayscale"
+            />
+          )}
           
-          {/* Vignette Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/10 pointer-events-none z-30"></div>
+          {/* Visual Overlays */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/10 pointer-events-none"></div>
           
-          {/* Sleeping indicators */}
-          {isSleeping && (
-            <div className="absolute top-8 right-10 z-40 flex flex-col items-center">
-              <span className="text-white text-3xl font-black animate-bounce delay-100 opacity-80 drop-shadow-lg">Z</span>
-              <span className="text-white text-2xl font-black animate-bounce delay-300 opacity-60 ml-4 -mt-2 drop-shadow-lg">z</span>
-              <span className="text-white text-xl font-black animate-bounce delay-500 opacity-40 ml-8 -mt-2 drop-shadow-lg">z</span>
+          {/* Status Label */}
+          <div className="absolute top-6 right-8 flex flex-col items-end z-30">
+            {isSleeping ? (
+              <div className="flex flex-col items-center">
+                <span className="text-white text-3xl font-black animate-bounce opacity-80">Z</span>
+                <span className="text-white text-xl font-black animate-bounce delay-200 opacity-60 -mt-2">z</span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-3">
+                 <div className={`w-2 h-2 rounded-full animate-pulse ${videoError ? 'bg-rose-400' : 'bg-emerald-400'}`}></div>
+                 <span className="text-[10px] font-black text-white uppercase tracking-[0.2em] bg-black/40 backdrop-blur-md px-3 py-1 rounded-full border border-white/20">
+                    {videoError ? 'FALLBACK ACTIVE' : `LUMI: ${mood}`}
+                 </span>
+              </div>
+            )}
+          </div>
+
+          {/* Interaction Prompt */}
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-30">
+             <div className="px-5 py-2 bg-indigo-600/90 backdrop-blur-xl rounded-full shadow-2xl border border-indigo-400/50">
+                <span className="text-[10px] font-black text-white uppercase tracking-widest whitespace-nowrap">
+                  Wake or Change Mood
+                </span>
+             </div>
+          </div>
+
+          {/* Debugging Info (Visible only if video fails) */}
+          {videoError && activeVideo && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center bg-black/70 backdrop-blur-sm z-10">
+              <span className="text-rose-400 font-black text-xs uppercase tracking-widest mb-2">Direct Link Error</span>
+              <p className="text-white/80 text-[10px] font-bold max-w-xs leading-relaxed">
+                The URL provided is not a direct video file. <br/>
+                <code className="bg-white/10 px-1 py-0.5 rounded mt-2 block overflow-hidden text-ellipsis whitespace-nowrap">{activeVideo}</code>
+                <span className="mt-2 block opacity-60">Try using the "Raw" URL from GitHub.</span>
+              </p>
             </div>
           )}
         </div>
