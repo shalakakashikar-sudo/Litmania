@@ -105,11 +105,6 @@ const App: React.FC = () => {
           <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16">
             
             <div className="w-full lg:w-3/5 flex flex-col items-center lg:items-start text-center lg:text-left z-10 order-2 lg:order-1">
-               <div className="mb-4">
-                  <span className="text-[10px] font-black text-indigo-600 uppercase tracking-[0.3em] px-4 py-1.5 bg-indigo-50 rounded-full border border-indigo-100">
-                    {moodConfig[lunaMood].subtitle}
-                  </span>
-               </div>
                <h1 className="text-4xl lg:text-6xl font-serif-elegant font-black italic text-slate-900 leading-[1.1] mb-8 drop-shadow-sm min-h-[140px]">
                   "{moodConfig[lunaMood].quote}"
                </h1>
@@ -147,11 +142,16 @@ const App: React.FC = () => {
                </div>
             </div>
 
-            <div className="w-full lg:w-2/5 flex justify-center lg:justify-end order-1 lg:order-2 animate-in fade-in zoom-in-95 duration-1000">
+            <div className="w-full lg:w-2/5 flex flex-col items-center lg:items-end order-1 lg:order-2 animate-in fade-in zoom-in-95 duration-1000">
                <LunaMascot 
                 mood={lunaMood} 
                 onClick={cycleMood} 
                />
+               <div className="mt-6">
+                  <span className="text-[10px] font-black text-indigo-600 uppercase tracking-[0.3em] px-4 py-1.5 bg-indigo-50 rounded-full border border-indigo-100 shadow-sm whitespace-nowrap">
+                    {moodConfig[lunaMood].subtitle}
+                  </span>
+               </div>
             </div>
 
           </div>
