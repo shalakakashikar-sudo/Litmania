@@ -14,14 +14,8 @@ interface LunaMascotProps {
  * GitHub Raw (raw.githubusercontent.com) is NOT a video CDN. It often fails 
  * on production sites because it doesn't support "Byte Range" requests 
  * which allow browsers to buffer.
- * 
- * IF THE VIDEO STILL FAILS ON VERCEL:
- * 1. Use Vercel Blob (native to your platform).
- * 2. Use Cloudinary or Imgur (Right-click video -> Copy Video Address).
- * 3. Use a dedicated host like Supabase Storage or Firebase Storage.
  */
 const MOOD_VIDEOS: Record<string, string> = {
-  // Corrected Raw GitHub Links:
   sleeping: 'https://raw.githubusercontent.com/shalakakashikar-sudo/Lumi/2916fb94ea2b0fd63b280eade78ed2eb9a7b6aae/luna_sleeping.mp4.mp4', 
   neutral: 'https://raw.githubusercontent.com/shalakakashikar-sudo/Lumi/adaa8901665693e0b1af657fabbccba89a5f6daa/Video_Generation_for_Neutral_Expression.mp4',
   surprised: 'https://raw.githubusercontent.com/shalakakashikar-sudo/Lumi/386507bb5235c293dc32bba01827a086c3cecbb4/Video_Generation_Surprised_Expression.mp4', 
@@ -63,7 +57,6 @@ const LunaMascot: React.FC<LunaMascotProps> = ({ mood, onClick }) => {
   useEffect(() => {
     setVideoError(false);
     setIsLoading(true);
-    // Force video reload when source changes
     if (videoRef.current) {
       videoRef.current.load();
     }
@@ -128,21 +121,7 @@ const LunaMascot: React.FC<LunaMascotProps> = ({ mood, onClick }) => {
           
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/10 pointer-events-none"></div>
           
-          <div className="absolute top-6 right-8 flex flex-col items-end z-30">
-            {isSleeping ? (
-              <div className="flex flex-col items-center">
-                <span className="text-white text-3xl font-black animate-bounce opacity-80">Z</span>
-                <span className="text-white text-xl font-black animate-bounce delay-200 opacity-60 -mt-2">z</span>
-              </div>
-            ) : (
-              <div className="flex items-center gap-3">
-                 <div className={`w-2 h-2 rounded-full animate-pulse ${videoError ? 'bg-rose-400' : 'bg-emerald-400'}`}></div>
-                 <span className="text-[10px] font-black text-white uppercase tracking-[0.2em] bg-black/40 backdrop-blur-md px-3 py-1 rounded-full border border-white/20">
-                    {videoError ? 'CDN ERROR' : `LUMI: ${mood}`}
-                 </span>
-              </div>
-            )}
-          </div>
+          {/* Status Label (Removed as requested) */}
 
           <div className="absolute bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-30">
              <div className="px-5 py-2 bg-indigo-600/90 backdrop-blur-xl rounded-full shadow-2xl border border-indigo-400/50">

@@ -120,7 +120,7 @@ export const LITERARY_DEVICES: LiteraryDevice[] = [
     accentColor: "amber",
     shortDefinition: "Giving human traits to objects or ideas.",
     longDefinition: "Personification is a specific type of metaphor where human qualities—emotions, desires, sensations, or gestures—are attributed to inanimate objects, animals, or abstract ideas. This device 'animates' the world, allowing writers to create empathy for non-human entities and making descriptions more relatable.",
-    imageUrl: "https://images.unsplash.com/photo-1518173946687-a4c8a9b746f5?auto=format&fit=crop&q=80&w=800",
+    imageUrl: "https://images.unsplash.com/photo-1651733637002-3082ad32842d?q=80&w=435&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     examples: [
       { text: "The wind whistled a lonely tune.", source: "Atmospheric", type: "Literature", explanation: "Whistling is a human act, suggesting the wind has a mood or intention." },
       /* Corrected 'glass thereof' to 'lack thereof' below */
@@ -484,7 +484,7 @@ export const LITERARY_DEVICES: LiteraryDevice[] = [
     accentColor: "cyan",
     shortDefinition: "Repetition of consonant sounds within or at the end of words.",
     longDefinition: "Consonance is a sound device characterized by the repetition of the same consonant sound in a short sequence of words. Unlike alliteration, which is restricted to the initial sounds, consonance can occur anywhere—beginning, middle, or end—but is most often found at the end of words.",
-    imageUrl: "https://images.unsplash.com/photo-1518117648329-847039239537?auto=format&fit=crop&q=80&w=800",
+    imageUrl: "https://images.unsplash.com/photo-1590880449155-b54f958ce314?q=80&w=1658&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     examples: [
       { text: "Pitter-patter of little feet.", source: "Common Usage", type: "Everyday", explanation: "Repeats the 'T' and 'R' sounds across multiple words." },
       { text: "The ship has sailed to the far shores.", source: "Poetic", type: "Literature", explanation: "Repeats the 'S' and 'H' sounds." },
@@ -583,7 +583,7 @@ export const LITERARY_DEVICES: LiteraryDevice[] = [
     accentColor: "slate",
     shortDefinition: "The use of harsh, discordant, or unmelodious sounds.",
     longDefinition: "Cacophony is a harsh, discordant mixture of sounds. In literature, it is a deliberate choice to use words with sharp, hissing, or explosive consonants (k, t, g, d, p, b) to create a sense of disorder, violence, or difficulty, often reflecting the chaotic theme of the piece.",
-    imageUrl: "https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&q=80&w=800",
+    imageUrl: "https://images.unsplash.com/photo-1737801113675-ae279b8c5958?q=80&w=1029&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     examples: [
       { text: "Beware the Jabberwock, my son! The jaws that bite, the claws that catch!", source: "Lewis Carroll", type: "Literature", explanation: "The hard 'J', 'B', 'K', and 'T' sounds create a jagged, dangerous audio landscape." },
       { text: "The clash and clang of the iron machines.", source: "Industrial Revolution", type: "Everyday", explanation: "Mimics the unmusical, harsh noise of a factory." },
@@ -616,7 +616,7 @@ export const LITERARY_DEVICES: LiteraryDevice[] = [
     accentColor: "rose",
     shortDefinition: "The use of sweet, melodic, and harmonious sounds.",
     longDefinition: "Euphony is the quality of being pleasing to the ear, especially through a harmonious combination of words. It relies on soft consonants (l, m, n, r, f, v, s, th, wh) and long, open vowel sounds to create a tranquil, luxurious, or comforting atmosphere in the reader's mind.",
-    imageUrl: "https://images.unsplash.com/photo-1518173946687-a4c8a9b746f5?auto=format&fit=crop&q=80&w=800",
+    imageUrl: "https://images.unsplash.com/photo-1545132059-a90e55c5286c?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     examples: [
       { text: "Season of mists and mellow fruitfulness.", source: "John Keats", type: "Literature", explanation: "The soft 'S', 'M', and 'L' sounds create a relaxed, autumnal mood." },
       { text: "The lullaby of the flowing stream.", source: "Nature Writing", type: "Everyday", explanation: "The liquid 'L' sounds mimic the gentle movement of water." },
@@ -649,7 +649,7 @@ export const LITERARY_DEVICES: LiteraryDevice[] = [
     accentColor: "zinc",
     shortDefinition: "Contrast of ideas using a parallel structural arrangement.",
     longDefinition: "Antithesis involves the placement of two starkly contrasting ideas next to each other in a balanced or parallel grammatical structure. This 'see-saw' effect emphasizes the magnitude of the difference between the two concepts and makes the statement highly memorable.",
-    imageUrl: "https://images.unsplash.com/photo-1493246507139-91e8bef99c17?auto=format&fit=crop&q=80&w=800",
+    imageUrl: "https://images.unsplash.com/photo-1631470341240-f9d338132c84?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     examples: [
       { text: "That's one small step for man, one giant leap for mankind.", source: "Neil Armstrong", type: "Everyday", explanation: "Contrasts 'small step' vs 'giant leap' using parallel phrases." },
       { text: "To err is human; to forgive, divine.", source: "Alexander Pope", type: "Classic", explanation: "Contrasts human weakness with divine perfection in two balanced clauses." },
@@ -682,7 +682,7 @@ export const LITERARY_DEVICES: LiteraryDevice[] = [
     accentColor: "emerald",
     shortDefinition: "A witty understatement that belittles something.",
     longDefinition: "Meiosis is a form of understatement that intentionally belittles or downplays the significance of something, often to achieve a witty or dismissive effect. It is the direct opposite of hyperbole and is frequently used in British humor and social satire.",
-    imageUrl: "https://images.unsplash.com/photo-1512418490979-92798ccc13a0?auto=format&fit=crop&q=80&w=800",
+    imageUrl: "https://plus.unsplash.com/premium_photo-1676031147005-f3543e4584ee?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     examples: [
       { text: "Calling the Atlantic Ocean 'the pond'.", source: "Colloquialism", type: "Everyday", explanation: "Drastically minimizes one of the world's largest oceans to a small pool." },
       { text: "It's just a flesh wound (after losing a limb).", source: "Monty Python", type: "Classic", explanation: "A legendary example of minimizing a catastrophic injury." },
@@ -914,7 +914,7 @@ export const LITERARY_DEVICES: LiteraryDevice[] = [
     accentColor: "rose",
     shortDefinition: "A concise statement of a general truth or moral principle.",
     longDefinition: "An aphorism is a brief, pithy statement that expresses a general truth or a moral principle. It is meant to be highly memorable, often using rhyme or parallel structure to ensure the wisdom 'sticks' in the reader's mind. It is essentially a 'truth bomb'.",
-    imageUrl: "https://images.unsplash.com/photo-1528459061998-5645ad99e39e?auto=format&fit=crop&q=80&w=800",
+    imageUrl: "https://plus.unsplash.com/premium_photo-1675788169635-1e7074bff3e5?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     examples: [
       { text: "A journey of a thousand miles starts with a single step.", source: "Lao Tzu", type: "Classic", explanation: "A universal truth about patience and beginning big tasks." },
       { text: "If it ain't broke, don't fix it.", source: "Folk Wisdom", type: "Everyday", explanation: "A practical aphorism about not interfering with working systems." },
@@ -947,7 +947,7 @@ export const LITERARY_DEVICES: LiteraryDevice[] = [
     accentColor: "slate",
     shortDefinition: "The intentional use of obsolete or old-fashioned language.",
     longDefinition: "Archaism is the deliberate use of words, phrases, or grammatical structures that are no longer in common use. It is used to create a historical, religious, or legendary atmosphere, effectively transporting the reader back in time through the vocabulary.",
-    imageUrl: "https://images.unsplash.com/photo-1544642899-f0d6e5f6ed6a?auto=format&fit=crop&q=80&w=800",
+    imageUrl: "https://images.unsplash.com/photo-1561417545-d14ca3cd1479?q=80&w=435&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     examples: [
       { text: "To thine own self be true.", source: "Shakespeare", type: "Classic", explanation: "'Thine' is an archaic form of 'your' used to add gravity and period-flavor." },
       { text: "Whither goest thou?", source: "Biblical Style", type: "Classic", explanation: "Uses old forms of 'where' and 'go' to sound religious or ancient." },
@@ -980,7 +980,7 @@ export const LITERARY_DEVICES: LiteraryDevice[] = [
     accentColor: "purple",
     shortDefinition: "Using more words than necessary to express an idea.",
     longDefinition: "Circumlocution is the use of many words where fewer would do, especially in a deliberate attempt to be vague or evasive. Literally meaning 'talking around', it is used to avoid social taboos, hide the truth, or make a character sound pompous and overly formal.",
-    imageUrl: "https://images.unsplash.com/photo-1465225310220-7e15434d29e3?auto=format&fit=crop&q=80&w=800",
+    imageUrl: "https://images.unsplash.com/photo-1552181903-a6af3a3d159d?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     examples: [
       { text: "He-Who-Must-Not-Be-Named.", source: "Harry Potter", type: "Literature", explanation: "Circumlocution used to avoid a fearful name (Voldemort)." },
       { text: "The vehicle of four-wheeled transportation.", source: "Pompous Speech", type: "Everyday", explanation: "An unnecessarily long way to say 'car'." },
@@ -1409,7 +1409,7 @@ export const LITERARY_DEVICES: LiteraryDevice[] = [
     accentColor: "cyan",
     shortDefinition: "Understatement through the use of double negatives.",
     longDefinition: "Litotes is a form of understatement that uses a double negative (or a negation of the opposite) to emphasize a positive point. It is often ironic, modest, or diplomatic, allowing a speaker to agree with something without sounding overly enthusiastic.",
-    imageUrl: "https://images.unsplash.com/photo-1528459061998-5645ad99e39e?auto=format&fit=crop&q=80&w=800",
+    imageUrl: "https://plus.unsplash.com/premium_photo-1733840986122-c6d6d5b36aeb?q=80&w=464&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     examples: [
       { text: "He is no fool.", source: "Description", type: "Everyday", explanation: "Implicitly means he is actually quite smart." },
       { text: "The weather was not unpleasant.", source: "Diplomacy", type: "Everyday", explanation: "A subtle way to say the weather was good." },
@@ -1442,7 +1442,7 @@ export const LITERARY_DEVICES: LiteraryDevice[] = [
     accentColor: "stone",
     shortDefinition: "The omission of conjunctions between parts of a sentence.",
     longDefinition: "Asyndeton is a stylistic device that intentionally eliminates conjunctions (like 'and', 'or', 'but') between phrases and in a sentence while maintaining grammatical accuracy. This speeds up the rhythm of the text, creating a sense of urgency, intensity, or a list that seems infinite.",
-    imageUrl: "https://images.unsplash.com/photo-1508919892863-ed1bf6cc721b?auto=format&fit=crop&q=80&w=800",
+    imageUrl: "https://plus.unsplash.com/premium_photo-1669075728413-4e613e682346?q=80&w=580&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     examples: [
       { text: "I came, I saw, I conquered.", source: "Julius Caesar", type: "Classic", explanation: "The lack of 'and' creates a sense of speed and inevitable power." },
       { text: "He's gone, lost, forgotten.", source: "Drama", type: "Literature", explanation: "The abrupt ending of each word adds a sense of finality." },
@@ -1575,7 +1575,7 @@ export const LITERARY_DEVICES: LiteraryDevice[] = [
     accentColor: "fuchsia",
     shortDefinition: "A rhyme that occurs within a single line of verse.",
     longDefinition: "Internal rhyme is a poetic device in which a word in the middle of a line rhymes with a word at the end of the same line, or with a word in the middle of the next line. It adds a sophisticated layer of musicality and complexity to a poem, making it feel tighter and more melodic.",
-    imageUrl: "https://images.unsplash.com/photo-1518117648329-847039239537?auto=format&fit=crop&q=80&w=800",
+    imageUrl: "https://images.unsplash.com/photo-1753742731099-028d1a0555fb?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     examples: [
       { text: "Once upon a midnight dreary, while I pondered weak and weary.", source: "Edgar Allan Poe", type: "Literature", explanation: "'Dreary' and 'Weary' rhyme within the same line of 'The Raven'." },
       { text: "Double, double toil and trouble.", source: "Shakespeare", type: "Classic", explanation: "'Double' and 'Trouble' create an internal echo within the witch's chant." },
@@ -1675,7 +1675,7 @@ export const LITERARY_DEVICES: LiteraryDevice[] = [
     accentColor: "amber",
     shortDefinition: "Animals literally acting as human characters.",
     longDefinition: "Anthropomorphism is the literal attribution of human traits, emotions, and behaviors to non-human entities, specifically animals. Unlike personification, which is usually a figurative description ('the wind sighed'), anthropomorphism involves animals becoming full characters who talk, wear clothes, have jobs, and exhibit human psychology.",
-    imageUrl: "https://images.unsplash.com/photo-1541411194564-99d2112e4438?auto=format&fit=crop&q=80&w=800",
+    imageUrl: "https://images.unsplash.com/photo-1752243719280-e22c568523c2?q=80&w=422&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     examples: [
       { text: "Mickey Mouse.", source: "Walt Disney", type: "Everyday", explanation: "A mouse that wears gloves, drives a car, and has a social life." },
       { text: "Animal Farm.", source: "George Orwell", type: "Literature", explanation: "The pigs literally run a government and walk on two legs." },
@@ -1741,7 +1741,7 @@ export const LITERARY_DEVICES: LiteraryDevice[] = [
     accentColor: "blue",
     shortDefinition: "A descriptive title or phrase used to characterize a person.",
     longDefinition: "An epithet is a descriptive literary device that describes a place, a thing, or a person in such a way that it helps in making their characteristics more prominent than they actually are. Often, these epithets become part of the person's name or are used as a fixed title for a hero.",
-    imageUrl: "https://images.unsplash.com/photo-1545167622-3a6ac756aff4?auto=format&fit=crop&q=80&w=800",
+    imageUrl: "https://plus.unsplash.com/premium_photo-1675896162496-fde0929269d8?q=80&w=774&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     examples: [
       { text: "Grey-eyed Athena.", source: "Homer (The Odyssey)", type: "Classic", explanation: "A fixed description used every time the goddess is mentioned." },
       { text: "The Great Emancipator.", source: "History", type: "Everyday", explanation: "An epithet for Abraham Lincoln emphasizing his role in ending slavery." },
@@ -1807,7 +1807,7 @@ export const LITERARY_DEVICES: LiteraryDevice[] = [
     accentColor: "purple",
     shortDefinition: "An abrupt transition from the sublime to the ridiculous.",
     longDefinition: "Bathos is an unintended or deliberate transition by a writer from a high, sublime, or noble style to a commonplace or ridiculous one. Often called an 'anticlimax', it is used for comedic effect or to expose the silliness of a character's overly dramatic behavior.",
-    imageUrl: "https://images.unsplash.com/photo-1517030330234-94c4fa948ebc?auto=format&fit=crop&q=80&w=800",
+    imageUrl: "https://plus.unsplash.com/premium_photo-1677545183884-421157b2da02?q=80&w=872&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     examples: [
       { text: "He lost his kingdom, his power, and his pen.", source: "Alexander Pope (Satire)", type: "Classic", explanation: "Ends a list of grand losses with a trivial one, undercutting the drama." },
       { text: "The ballet was beautiful, moving, and far too long.", source: "Review", type: "Everyday", explanation: "Ends praise with a mundane complaint." },
@@ -1873,7 +1873,7 @@ export const LITERARY_DEVICES: LiteraryDevice[] = [
     accentColor: "emerald",
     shortDefinition: "The use of successive verbal constructions that correspond in structure.",
     longDefinition: "Parallelism is the use of components in a sentence that are grammatically the same; or similar in their construction, sound, meaning, or meter. It adds balance, rhythm, and clarity to sentences, making them much easier for the brain to process and remember.",
-    imageUrl: "https://images.unsplash.com/photo-1493246507139-91e8bef99c17?auto=format&fit=crop&q=80&w=800",
+    imageUrl: "https://images.unsplash.com/photo-1684720852626-84d28dbeabc1?q=80&w=498&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     examples: [
       { text: "Easy come, easy go.", source: "Common Phrase", type: "Everyday", explanation: "Balances the structure of two adjective-verb pairs perfectly." },
       { text: "Flying is fast, comfortable, and safe.", source: "Travel List", type: "Everyday", explanation: "Uses three parallel adjectives to describe the action." },
