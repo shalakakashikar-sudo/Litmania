@@ -21,12 +21,13 @@ interface LunaMascotProps {
  * 3. Use a dedicated host like Supabase Storage or Firebase Storage.
  */
 const MOOD_VIDEOS: Record<string, string> = {
+  // Corrected Raw GitHub Links:
   sleeping: 'https://raw.githubusercontent.com/shalakakashikar-sudo/Lumi/2916fb94ea2b0fd63b280eade78ed2eb9a7b6aae/luna_sleeping.mp4.mp4', 
   neutral: 'https://raw.githubusercontent.com/shalakakashikar-sudo/Lumi/adaa8901665693e0b1af657fabbccba89a5f6daa/Video_Generation_for_Neutral_Expression.mp4',
   surprised: 'https://raw.githubusercontent.com/shalakakashikar-sudo/Lumi/386507bb5235c293dc32bba01827a086c3cecbb4/Video_Generation_Surprised_Expression.mp4', 
-  sad: '',
-  winking: '',
-  thinking: '',
+  sad: 'https://raw.githubusercontent.com/shalakakashikar-sudo/Lumi/9ebb7b92e15c615b110ad1c40c5e122d6846c753/Sad_Expression_Video_Ready.mp4',
+  winking: 'https://raw.githubusercontent.com/shalakakashikar-sudo/Lumi/8c37fce6012d0e92a20be616b07615ff4d30ce4e/Video_Generation_For_Winking.mp4',
+  thinking: 'https://raw.githubusercontent.com/shalakakashikar-sudo/Lumi/15f229a0a8f8bf1ea575c1cf868cdcc527832eef/Video_Ready_After_Thinking.mp4',
   excited: 'https://raw.githubusercontent.com/shalakakashikar-sudo/Lumi/4dc97b1f6641ced6a2fa683e51eddf4652146e5c/Video_Ready_For_Excitement.mp4',
   determined: '',
 };
@@ -99,7 +100,17 @@ const LunaMascot: React.FC<LunaMascotProps> = ({ mood, onClick }) => {
               onLoadedData={() => setIsLoading(false)}
               onError={(e) => {
                 const videoTarget = e.target as HTMLVideoElement;
-                console.error("Video failed to load on this platform. Error Code:", videoTarget.error?.code);
+                const err = videoTarget.error;
+                let message = 'Unknown Video Error';
+                if (err) {
+                  switch (err.code) {
+                    case 1: message = 'Aborted'; break;
+                    case 2: message = 'Network Error'; break;
+                    case 3: message = 'Decoding Error'; break;
+                    case 4: message = 'Source Not Supported'; break;
+                  }
+                }
+                console.error(`Video Error [${activeVideo}]: ${message} (Code: ${err?.code || 'N/A'})`);
                 setVideoError(true);
                 setIsLoading(false);
               }}
