@@ -32,7 +32,6 @@ const LunaMascot: React.FC<LunaMascotProps> = ({ mood, onClick }) => {
   const [isSleeping, setIsSleeping] = useState(false);
   const [videoError, setVideoError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [isMuted, setIsMuted] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -65,17 +64,11 @@ const LunaMascot: React.FC<LunaMascotProps> = ({ mood, onClick }) => {
 
   const activeVideo = isSleeping ? MOOD_VIDEOS.sleeping : (MOOD_VIDEOS[mood] || MOOD_VIDEOS.neutral);
 
-  const handleMascotClick = () => {
-    // Unmute after the first interaction to comply with browser policies
-    setIsMuted(false);
-    onClick();
-  };
-
   return (
     <div className="relative group w-full max-w-xl xl:max-w-2xl">
       <div 
         className="relative aspect-video w-full cursor-pointer transition-all duration-700 ease-in-out hover:brightness-105"
-        onClick={handleMascotClick}
+        onClick={onClick}
       >
         <div className="absolute inset-10 rounded-[2.5rem] bg-indigo-500/20 blur-[80px] group-hover:bg-indigo-500/30 transition-all duration-700"></div>
         
@@ -94,7 +87,7 @@ const LunaMascot: React.FC<LunaMascotProps> = ({ mood, onClick }) => {
               className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
               autoPlay
               loop
-              muted={isMuted}
+              muted
               playsInline
               crossOrigin="anonymous"
               onLoadedData={() => setIsLoading(false)}
@@ -128,10 +121,12 @@ const LunaMascot: React.FC<LunaMascotProps> = ({ mood, onClick }) => {
           
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/10 pointer-events-none"></div>
           
+          {/* Status Label (Removed as requested) */}
+
           <div className="absolute bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-30">
              <div className="px-5 py-2 bg-indigo-600/90 backdrop-blur-xl rounded-full shadow-2xl border border-indigo-400/50">
                 <span className="text-[10px] font-black text-white uppercase tracking-widest whitespace-nowrap">
-                  {isMuted ? 'Click to Unmute & Wake' : 'Cycle Mood'}
+                  Wake or Change Mood
                 </span>
              </div>
           </div>
