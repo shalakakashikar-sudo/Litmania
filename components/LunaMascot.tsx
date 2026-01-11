@@ -17,13 +17,13 @@ interface LunaMascotProps {
  */
 const MOOD_VIDEOS: Record<string, string> = {
   sleeping: 'https://raw.githubusercontent.com/shalakakashikar-sudo/Lumi/2916fb94ea2b0fd63b280eade78ed2eb9a7b6aae/luna_sleeping.mp4.mp4', 
-  neutral: 'https://raw.githubusercontent.com/shalakakashikar-sudo/Lumi/adaa8901665693e0b1af657fabbccba89a5f6daa/Video_Generation_for_Neutral_Expression.mp4',
+  neutral: 'https://raw.githubusercontent.com/shalakakashikar-sudo/Lumi/afd36711213481c1aadd1766cf046358c89b69e4/Video_Generation_Request_Fulfilled.mp4',
   surprised: 'https://raw.githubusercontent.com/shalakakashikar-sudo/Lumi/386507bb5235c293dc32bba01827a086c3cecbb4/Video_Generation_Surprised_Expression.mp4', 
   sad: 'https://raw.githubusercontent.com/shalakakashikar-sudo/Lumi/9ebb7b92e15c615b110ad1c40c5e122d6846c753/Sad_Expression_Video_Ready.mp4',
   winking: 'https://raw.githubusercontent.com/shalakakashikar-sudo/Lumi/8c37fce6012d0e92a20be616b07615ff4d30ce4e/Video_Generation_For_Winking.mp4',
   thinking: 'https://raw.githubusercontent.com/shalakakashikar-sudo/Lumi/15f229a0a8f8bf1ea575c1cf868cdcc527832eef/Video_Ready_After_Thinking.mp4',
   excited: 'https://raw.githubusercontent.com/shalakakashikar-sudo/Lumi/4dc97b1f6641ced6a2fa683e51eddf4652146e5c/Video_Ready_For_Excitement.mp4',
-  determined: '',
+  determined: 'https://raw.githubusercontent.com/shalakakashikar-sudo/Lumi/afd36711213481c1aadd1766cf046358c89b69e4/React_Component_Video_Integration.mp4',
 };
 
 const FALLBACK_IMAGE = "https://images.unsplash.com/photo-1495360010541-f48722b34f7d?auto=format&fit=crop&q=80&w=1200";
@@ -32,6 +32,7 @@ const LunaMascot: React.FC<LunaMascotProps> = ({ mood, onClick }) => {
   const [isSleeping, setIsSleeping] = useState(false);
   const [videoError, setVideoError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isMuted, setIsMuted] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -64,11 +65,17 @@ const LunaMascot: React.FC<LunaMascotProps> = ({ mood, onClick }) => {
 
   const activeVideo = isSleeping ? MOOD_VIDEOS.sleeping : (MOOD_VIDEOS[mood] || MOOD_VIDEOS.neutral);
 
+  const handleMascotClick = () => {
+    // Unmute after the first interaction to comply with browser policies
+    setIsMuted(false);
+    onClick();
+  };
+
   return (
     <div className="relative group w-full max-w-xl xl:max-w-2xl">
       <div 
         className="relative aspect-video w-full cursor-pointer transition-all duration-700 ease-in-out hover:brightness-105"
-        onClick={onClick}
+        onClick={handleMascotClick}
       >
         <div className="absolute inset-10 rounded-[2.5rem] bg-indigo-500/20 blur-[80px] group-hover:bg-indigo-500/30 transition-all duration-700"></div>
         
@@ -87,7 +94,7 @@ const LunaMascot: React.FC<LunaMascotProps> = ({ mood, onClick }) => {
               className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
               autoPlay
               loop
-              muted
+              muted={isMuted}
               playsInline
               crossOrigin="anonymous"
               onLoadedData={() => setIsLoading(false)}
@@ -121,12 +128,10 @@ const LunaMascot: React.FC<LunaMascotProps> = ({ mood, onClick }) => {
           
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/10 pointer-events-none"></div>
           
-          {/* Status Label (Removed as requested) */}
-
           <div className="absolute bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-30">
              <div className="px-5 py-2 bg-indigo-600/90 backdrop-blur-xl rounded-full shadow-2xl border border-indigo-400/50">
                 <span className="text-[10px] font-black text-white uppercase tracking-widest whitespace-nowrap">
-                  Wake or Change Mood
+                  {isMuted ? 'Click to Unmute & Wake' : 'Cycle Mood'}
                 </span>
              </div>
           </div>
